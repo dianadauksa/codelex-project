@@ -29,6 +29,7 @@ class FinnhubAPIStocksRepository implements StocksRepository
                 (float)($apiResponse->c-$apiResponse->pc),
             );
         }
+        sort($stocks);
         return new StocksCollection($stocks);
     }
 }

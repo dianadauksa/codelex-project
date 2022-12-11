@@ -28,4 +28,9 @@ class UserManagementService
     {
         return $this->usersRepository->getByID($id);
     }
+
+    public function getUserStocks(int $id): array
+    {
+        return $this->usersRepository->getUserStocks($id);
+    }
 }

@@ -26,35 +26,65 @@
                         </div>
                     </div>
 
-                <div class="col-span-12 sm:col-span-6 md:col-span-3">
-                    <div class="flex flex-row bg-white shadow-sm rounded p-4">
-                        <div class="flex flex-col flex-grow ml-4">
-                            <div class="text-sm text-gray-500">
-                                <div class="col-span-12 lg:col-span-8">
-                                    <p class="inline-block rounded-full text-white bg-sky-600 text-xs font-bold mr-1 md:mr-2 mb-2 px-2 md:px-4 py-1 ">
-                                        Buy stock
-                                    </p>
+                    <div class="col-span-12 sm:col-span-6 md:col-span-3">
+                        <div class="flex flex-row bg-white shadow-sm rounded p-4">
+                            <div class="flex flex-col flex-grow ml-4">
+                                <div class="text-sm text-gray-500">
+                                    <div class="col-span-12 lg:col-span-8"></div>
+                                </div>
+                                <div class="font-bold text-lg">Current price: ${{ stock.currentPrice|number_format(2) }}</div>
+                                <div>
+                                    <form action="/buy" method="post">
+                                        <input type="hidden" name="symbol" value="{{ stock.symbol }}">
+                                        <input type="number" name="amount" placeholder="Amount" id="buy-amount">
+                                        <input type="submit" value="Buy Stock" class="inline-block rounded-full text-white bg-sky-600 text-xs font-bold mr-1 md:mr-2 mb-2 px-2 md:px-4 py-1">
+                                    </form>
+                                    <div id="total-price">Total price: $0.00</div>
                                 </div>
                             </div>
-                            <div class="font-bold text-lg">Current price: ${{ stock.currentPrice|number_format(2) }}</div>
                         </div>
                     </div>
-                </div>
 
-                <div class="col-span-12 sm:col-span-6 md:col-span-3">
-                    <div class="flex flex-row bg-white shadow-sm rounded p-4">
-                        <div class="flex flex-col flex-grow ml-4">
-                            <div class="text-sm text-gray-500">
-                                <div class="col-span-12 lg:col-span-8">
-                                    <p class="inline-block rounded-full text-white bg-emerald-500 text-xs font-bold mr-1 md:mr-2 mb-2 px-2 md:px-4 py-1 ">
-                                        Sell stock
-                                    </p>
+                    <script>
+                        let amountInput = document.getElementById('buy-amount');
+                        let totalPrice = document.getElementById('total-price');
+
+                        amountInput.addEventListener('input', function() {
+                            let totalPurchaseAmount = amountInput.value * {{ stock.currentPrice|number_format(2) }};
+                            totalPrice.innerHTML = 'Total price: $' + totalPurchaseAmount.toFixed(2);
+                        });
+                    </script>
+
+                    <div class="col-span-12 sm:col-span-6 md:col-span-3">
+                        <div class="flex flex-row bg-white shadow-sm rounded p-4">
+                            <div class="flex flex-col flex-grow ml-4">
+                                <div class="text-sm text-gray-500">
+                                    <div class="col-span-12 lg:col-span-8"></div>
+                                </div>
+                                <div class="font-bold text-lg">Current price: ${{ stock.currentPrice|number_format(2) }}</div>
+                                <div>
+                                    <form action="/sell" method="post">
+                                        <input type="hidden" name="symbol" value="{{ stock.symbol }}">
+                                        <input type="number" name="amount" placeholder="Amount" id="sell-amount">
+                                        <input type="submit" value="Sell Stock" class="inline-block rounded-full text-white bg-emerald-600 text-xs font-bold mr-1 md:mr-2 mb-2 px-2 md:px-4 py-1">
+                                    </form>
+                                    <div id="total-sale">Total price: $0.00</div>
                                 </div>
                             </div>
-                            <div class="font-bold text-lg">Current price: ${{ stock.currentPrice|number_format(2) }}</div>
                         </div>
                     </div>
-                </div>
+
+                    <script>
+                        let saleAmountInput = document.getElementById('sell-amount');
+                        let totalSale = document.getElementById('total-sale');
+
+                        saleAmountInput.addEventListener('input', function() {
+                            let totalSaleAmount = saleAmountInput.value * {{ stock.currentPrice|number_format(2) }};
+                            totalSale.innerHTML = 'Total earnings: $' + totalSaleAmount.toFixed(2);
+                        });
+                    </script>
+
+
                 {% endfor %}
             </div>
         </div>

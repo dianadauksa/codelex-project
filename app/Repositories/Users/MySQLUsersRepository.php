@@ -53,4 +53,15 @@ class MySQLUsersRepository implements UsersRepository
             ->fetchAssociative();
         return $user ?: null;
     }
+
+    public function getUserStocks(int $id): ?array
+    {
+        $portfolio = $this->queryBuilder
+            ->select('*')
+            ->from('stocks')
+            ->where('user_id = ?')
+            ->setParameter(0, $id)
+            ->fetchAllAssociative();
+        return $portfolio ?: [];
+    }
 }

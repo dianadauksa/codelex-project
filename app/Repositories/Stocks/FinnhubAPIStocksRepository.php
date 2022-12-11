@@ -4,25 +4,31 @@ namespace App\Repositories\Stocks;
 
 use App\Models\Collections\StocksCollection;
 use App\Models\Stock;
+use GuzzleHttp\Client;
 
 class FinnhubAPIStocksRepository implements StocksRepository
 {
     public function getAll(array $stockSymbols): StocksCollection
     {
-        //  /search?q=apple Query text can be symbol, name, isin, or cusip
+        //  /stock/profile2?symbol=AAPL returns company data
         //  /quote?symbol=AAPL
         $apiKey = $_ENV["API_KEY"];
-        $stocks = new StocksCollection();
-        foreach ($stockSymbols as $symbol) {
-            $baseUrl = $_ENV["BASE_URL"];
-            $endpoint = "/quote";
-            $query = "?symbol={$symbol}&token=" . $apiKey;
-            $url = curl_init($baseUrl . $endpoint . $query);
-            curl_setopt($url, CURLOPT_RETURNTRANSFER, true);
-            $request = curl_exec($url);
-            $response = json_decode($request);
+        $baseUrl = $_ENV["BASE_URL"];
+        $endPoint = "/quote?symbol=";
 
-            $stocks->add(new Stock($symbol, $response->c, $response->c-$response->pc,));
+        $client = new Client();
+        $stocks = new StocksCollection();
+
+        foreach ($stockSymbols as $symbol) {
+            $query = "{$symbol}&token=" . $apiKey;
+            $quoteUrl = $baseUrl . $endPoint . $query;
+            $quoteResponse = $client->request('GET', $quoteUrl);
+            $quoteData = json_decode($quoteResponse->getBody()->getContents());
+
+            $stocks->add(new Stock(
+                $symbol,
+                $quoteData->c,
+                $quoteData->c-$quoteData->pc));
         }
         return $stocks;
     }

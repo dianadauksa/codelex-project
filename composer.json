@@ -5,11 +5,10 @@
     }
   },
   "require": {
-    "finnhub/client": "^1.1",
     "nikic/fast-route": "^1.3",
     "vlucas/phpdotenv": "^5.5",
     "twig/twig": "^3.4",
-    "guzzlehttp/guzzle": "^6.2",
+    "guzzlehttp/guzzle": "^7.0",
     "doctrine/dbal": "^3.5",
     "ext-curl": "*",
     "ext-json": "*"

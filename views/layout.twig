@@ -18,12 +18,16 @@
                     <a href="/" class="text-xl lg:text-3xl font-bold">Stock Stars</a>
                     <div class="md:flex justify-around space-x-4">
                         <a href="/" class="hover:text-sky-600 text-gray-700">Home</a>
-                        <a href="/" class="hover:text-sky-600 text-gray-700">My Stocks</a>
+                        {% if auth %}
+                        <a href="/portfolio" class="hover:text-sky-600 text-gray-700">My Stocks</a>
+                        {% endif %}
                     </div>
                 </div>
                 {% if auth %}
                     <div class="flex space-x-4 items-center">
-                        <p class="text-sky-500 font-semibold">Welcome, {{ auth.name }}</p>
+                        <p class="text-sky-500 font-semibold">
+                            Hi, {{ auth.name }}! Money available: ${{ auth.money|number_format(2) }}
+                        </p>
                         <a href="/logout" class="bg-sky-600 px-4 py-2 rounded text-white hover:bg-sky-500 text-sm">LOGOUT</a>
                     </div>
                 {% else %}

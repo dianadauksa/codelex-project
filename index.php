@@ -27,6 +27,9 @@ foreach ($authVariables as $variable) {
 $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $route) {
     $route->addRoute('GET', '/', ['App\Controllers\StockController', 'index']);
     $route->addRoute('GET', '/stock', ['App\Controllers\BuyStockController', 'index']);
+    $route->addRoute('POST', '/buy', ['App\Controllers\BuyStockController', 'buy']);
+    $route->addRoute('POST', '/sell', ['App\Controllers\BuyStockController', 'sell']);
+    $route->addRoute('GET', '/portfolio', ['App\Controllers\PortfolioController', 'index']);
     $route->addRoute('GET', '/register', ['App\Controllers\RegisterController', 'index']);
     $route->addRoute('POST', '/register', ['App\Controllers\RegisterController', 'register']);
     $route->addRoute('GET', '/login', ['App\Controllers\LoginController', 'index']);

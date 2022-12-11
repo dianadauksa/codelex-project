@@ -16,6 +16,6 @@ class ShowAllStocksService
 
     public function execute(array $stockSymbols): StocksCollection
     {
-        return $this->stocksRepository->getStocks($stockSymbols);
+        return $this->stocksRepository->getAll($stockSymbols);
     }
 }

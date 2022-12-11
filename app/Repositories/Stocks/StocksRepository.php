@@ -6,5 +6,5 @@ use App\Models\Collections\StocksCollection;
 
 interface StocksRepository
 {
-    public function getStocks(array $stockSymbols): StocksCollection;
+    public function getAll(array $stockSymbols): StocksCollection;
 }

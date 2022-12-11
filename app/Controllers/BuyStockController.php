@@ -12,6 +12,6 @@ class BuyStockController
         $stockSymbol = [strtoupper($_GET['symbol'])];
         $service = new ShowAllStocksService();
         $stocks = $service->execute($stockSymbol);
-        return new View("singleStock", ["stocks" => $stocks->getStocks()]);
+        return new View("singleStock", ["stocks" => $stocks->getAllStocks()]);
     }
 }

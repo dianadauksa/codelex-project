@@ -7,7 +7,7 @@ use App\Models\Stock;
 
 class FinnhubAPIStocksRepository implements StocksRepository
 {
-    public function getStocks(array $stockSymbols): StocksCollection
+    public function getAll(array $stockSymbols): StocksCollection
     {
         //  /search?q=apple Query text can be symbol, name, isin, or cusip
         //  /quote?symbol=AAPL

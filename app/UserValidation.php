@@ -2,7 +2,7 @@
 
 namespace App;
 
-class Validation
+class UserValidation
 {
     public function registerValidate(array $post): void
     {

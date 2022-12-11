@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\{Database, Redirect, Validation, View};
+use App\{Database, Redirect, UserValidation, View};
 
 class LoginController
 {
@@ -13,7 +13,7 @@ class LoginController
 
     public function login(): Redirect
     {
-        $validation = new Validation();
+        $validation = new UserValidation();
         $validation->loginValidate($_POST);
 
         if ($validation->validationFailed()) {

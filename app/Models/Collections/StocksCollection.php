@@ -8,7 +8,7 @@ class StocksCollection
 {
     private array $stocks = [];
 
-    public function __construct(array $stocks)
+    public function __construct(array $stocks = [])
     {
         foreach ($stocks as $stock) {
             $this->add($stock);

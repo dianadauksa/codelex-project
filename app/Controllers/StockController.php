@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\Services\ShowAllStocksService;
+use App\Services\Stock\ShowAllStocksService;
 use App\View;
 
 class StockController

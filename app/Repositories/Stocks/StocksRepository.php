@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repositories\Stocks;
 
 use App\Models\Collections\StocksCollection;
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Stock;
 
 use App\Models\Collections\StocksCollection;
-use App\Repositories\FinnhubAPIStocksRepository;
-use App\Repositories\StocksRepository;
+use App\Repositories\Stocks\FinnhubAPIStocksRepository;
+use App\Repositories\Stocks\StocksRepository;
 
 class ShowAllStocksService
 {

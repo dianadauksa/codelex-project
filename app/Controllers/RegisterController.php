@@ -2,8 +2,8 @@
 
 namespace App\Controllers;
 
-use App\{Redirect, Validation, View};
-use App\Services\{RegisterServiceRequest, RegisterService};
+use App\{Redirect, UserValidation, View};
+use App\Services\User\{RegisterService, RegisterServiceRequest};
 
 class RegisterController
 {
@@ -14,7 +14,7 @@ class RegisterController
 
     public function register(): Redirect
     {
-        $validation = new Validation();
+        $validation = new UserValidation();
         $validation->registerValidate($_POST);
         if ($validation->validationFailed()) {
             return new Redirect('/register');

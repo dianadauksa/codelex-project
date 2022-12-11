@@ -1,7 +1,18 @@
 {% extends 'layout.twig' %}
 {% block content %}
-    <div class="flex items-center bg-gray-100  text-gray-800">
+    <div class="flex items-center bg-gray-100 text-gray-800">
         <div class="p-4 w-full">
+            <div class="flex justify-center mb-4">
+                <form action="/stock" method="get">
+                    <div class="flex rounded-md overflow-hidden w-full">
+                        <input type="text" name="symbol" placeholder="Search stock e.g. 'AAPL'"
+                               class="w-full px-4 py-2 rounded-md rounded-r-none"/>
+                        <input type="submit" value="Search"
+                               class="bg-sky-600 hover:bg-blue-700 text-white px-4 text-md font-semibold py-2 rounded-r-md">
+                    </div>
+                </form>
+            </div>
+
             <div class="grid grid-cols-12 gap-4">
 
                 {% for stock in stocks %}
@@ -10,20 +21,17 @@
                             <div class="flex flex-col flex-grow ml-4">
                                 <div class="text-sm text-gray-500">
                                     <div class="col-span-12 lg:col-span-8">
-                                        <a href="#"
+                                        <a href="/stock?symbol={{ stock.symbol }}"
                                            class="inline-block rounded-full text-white bg-black text-xs font-bold mr-1 md:mr-2 mb-2 px-2 md:px-4 py-1 ">
                                             {{ stock.symbol }}
                                         </a>
                                     </div>
                                 </div>
-                                <a href="#" class="inline-block rounded-full text-black text-xs font-bold">
-                                    {{ stock.name }}
-                                </a>
-                                <div class="font-bold text-lg">${{ stock.currentPrice }}</div>
+                                <div class="font-bold text-lg">${{ stock.currentPrice|number_format(2) }}</div>
                                 {% if (stock.change > 0) %}
-                                    <span class="text-emerald-600">▲{{ stock.change }}%</span>
+                                    <span class="text-emerald-600">▲{{ stock.change|number_format(2) }}%</span>
                                 {% else %}
-                                    <span class="text-red-600">▼{{ stock.change }}%</span>
+                                    <span class="text-red-600">▼{{ stock.change|number_format(2) }}%</span>
                                 {% endif %}
                             </div>
                         </div>

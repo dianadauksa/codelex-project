@@ -9,22 +9,21 @@ class FinnhubAPIStocksRepository implements StocksRepository
 {
     public function getStocks(array $stockSymbols): StocksCollection
     {
-        // /stock/symbol?exchange=US   /quote?symbol=AAPL
+        //  /search?q=apple Query text can be symbol, name, isin, or cusip
+        //  /quote?symbol=AAPL
         $apiKey = $_ENV["API_KEY"];
         $stocks = [];
-        foreach ($stockSymbols as $key => $value) {
+        foreach ($stockSymbols as $symbol) {
             $baseUrl = $_ENV["BASE_URL"];
             $endpoint = "/quote";
-            $query = "?symbol={$value}&token=" . $apiKey;
+            $query = "?symbol={$symbol}&token=" . $apiKey;
             $ch = curl_init($baseUrl . $endpoint . $query);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             $response = curl_exec($ch);
             $apiResponse = json_decode($response);
 
             $stocks[] = new Stock(
-                $value,
-                $key,
-                'USD',
+                $symbol,
                 (float)$apiResponse->c,
                 (float)($apiResponse->c-$apiResponse->pc),
             );

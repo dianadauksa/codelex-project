@@ -3,7 +3,7 @@
 namespace App\Controllers;
 
 use App\{Redirect, UserValidation, View};
-use App\Services\User\{RegisterService, RegisterServiceRequest};
+use App\Services\User\{RegisterUserServiceRequest, UserManagementService};
 
 class RegisterController
 {
@@ -20,9 +20,9 @@ class RegisterController
             return new Redirect('/register');
         }
 
-        $registerService = new RegisterService();
-        $registerService->execute(
-            new RegisterServiceRequest(
+        $registerService = new UserManagementService();
+        $registerService->register(
+            new RegisterUserServiceRequest(
                 $_POST['name'],
                 $_POST['email'],
                 $_POST['password']

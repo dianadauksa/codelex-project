@@ -2,7 +2,7 @@
 
 namespace App\Services\User;
 
-class RegisterServiceRequest
+class RegisterUserServiceRequest
 {
     private string $name;
     private string $email;

@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\{Database, Redirect, UserValidation, View};
+use App\{Redirect, Services\User\UserManagementService, UserValidation, View};
 
 class LoginController
 {
@@ -20,13 +20,8 @@ class LoginController
             return new Redirect('/login');
         }
 
-        $queryBuilder = Database::getConnection()->createQueryBuilder();
-        $userData = $queryBuilder
-            ->select('*')
-            ->from('Users')
-            ->where('email = ?')
-            ->setParameter(0, $_POST['email'])
-            ->fetchAssociative();
+        $service = new UserManagementService();
+        $userData = $service->getUserByEmail($_POST['email']);
 
         $_SESSION["auth_id"] = $userData['id'];;
         return new Redirect('/');

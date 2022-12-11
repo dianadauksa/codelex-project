@@ -2,7 +2,7 @@
 
 namespace App\ViewVariables;
 
-use App\Database;
+use App\Services\User\UserManagementService;
 
 class AuthViewVariables implements ViewVariables
 {
@@ -16,18 +16,14 @@ class AuthViewVariables implements ViewVariables
         if (!isset($_SESSION['auth_id'])) {
             return [];
         }
-        $queryBuilder = Database::getConnection()->createQueryBuilder();
-        $user = $queryBuilder
-            ->select('*')
-            ->from('Users')
-            ->where('id = ?')
-            ->setParameter(0, $_SESSION['auth_id'])
-            ->fetchAssociative();
+        $service = new UserManagementService();
+        $user = $service->getUserById($_SESSION['auth_id']);
 
         return [
             'id' => $user['id'],
             'name' => $user['name'],
-            'email' => $user['email']
+            'email' => $user['email'],
+            'money' => $user['money']
         ];
     }
 }

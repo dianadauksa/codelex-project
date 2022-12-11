@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Services\User\UserManagementService;
+
 class UserValidation
 {
     public function registerValidate(array $post): void
@@ -9,18 +11,12 @@ class UserValidation
         $this->validateNewName($post);
         $this->validateNewEmail($post);
         $this->validateNewPassword($post);
-
     }
 
     public function loginValidate(array $post): void
     {
-        $queryBuilder = Database::getConnection()->createQueryBuilder();
-        $userData = $queryBuilder
-            ->select('*')
-            ->from('Users')
-            ->where('email = ?')
-            ->setParameter(0, $post['email'])
-            ->fetchAssociative();
+        $service = new UserManagementService();
+        $userData = $service->getUserByEmail($_POST['email']);
 
         if (!$userData) {
             $_SESSION['errors']['email'] = 'Invalid login email or password';
@@ -45,13 +41,8 @@ class UserValidation
 
     private function validateNewEmail(array $post): void
     {
-        $queryBuilder = Database::getConnection()->createQueryBuilder();
-        $userExists = $queryBuilder
-            ->select('*')
-            ->from('Users')
-            ->where('email = ?')
-            ->setParameter(0, $post['email'])
-            ->fetchOne();
+        $service = new UserManagementService();
+        $userExists = $service->getUserByEmail($_POST['email']);
 
         if ($userExists) {
             $_SESSION['errors']['email'] = 'Invalid email address';

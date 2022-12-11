@@ -22,7 +22,7 @@
                                 <div class="text-sm text-gray-500">
                                     <div class="col-span-12 lg:col-span-8">
                                         <a href="/stock?symbol={{ stock.symbol }}"
-                                           class="inline-block rounded-full text-white bg-black text-xs font-bold mr-1 md:mr-2 mb-2 px-2 md:px-4 py-1 ">
+                                           class="inline-block rounded-full text-white bg-black text-xs font-bold mr-1 md:mr-2 mb-2 px-2 md:px-4 py-1">
                                             {{ stock.symbol }}
                                         </a>
                                     </div>
@@ -34,6 +34,14 @@
                                     <span class="text-red-600">▼{{ stock.change|number_format(2) }}%</span>
                                 {% endif %}
                             </div>
+                            <a href="/stock?symbol={{ stock.symbol }}"
+                               class="inline-flex items-center rounded-full text-white bg-sky-600 text-xs font-bold my-5 mr-1 md:mr-2 mb-2 px-2 md:px-4 py-1">
+                                Buy
+                            </a>
+                            <a href="/stock?symbol={{ stock.symbol }}"
+                               class="inline-flex items-center rounded-full text-white bg-emerald-600 text-xs font-bold my-5 mr-1 md:mr-2 mb-2 px-2 md:px-4 py-1">
+                                Sell
+                            </a>
                         </div>
                     </div>
                 {% endfor %}

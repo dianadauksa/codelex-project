@@ -1,7 +1,7 @@
 <?php
 
 use App\{Redirect, View};
-use App\ViewVariables\{AuthViewVariables, ErrorViewVariables, ViewVariables};
+use App\ViewVariables\{AuthViewVariables, ErrorViewVariables, MyStocksViewVariables, ViewVariables};
 use Dotenv\Dotenv;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
@@ -16,7 +16,8 @@ $twig = new Environment($loader);
 
 $authVariables = [
     AuthViewVariables::class,
-    ErrorViewVariables::class
+    ErrorViewVariables::class,
+    MyStocksViewVariables::class
 ];
 /** @var ViewVariables $variable */
 foreach ($authVariables as $variable) {

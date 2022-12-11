@@ -30,6 +30,7 @@ class LoginController
     public function logout(): Redirect
     {
         unset($_SESSION['auth_id']);
+        unset($_SESSION['portfolio']);
         return new Redirect('/login');
     }
 }

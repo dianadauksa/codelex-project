@@ -12,7 +12,7 @@ class PortfolioController
         $service = new UserManagementService();
         $portfolio = $service->getUserStocks($_SESSION['auth_id']);
         $_SESSION['portfolio'] = $portfolio;
-        return new View("myStocks");
+        return new View("myStocks", ['portfolio' => $portfolio]);
     }
 }
 

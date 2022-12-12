@@ -64,4 +64,41 @@ class MySQLUsersRepository implements UsersRepository
             ->fetchAllAssociative();
         return $portfolio ?: [];
     }
+
+    public function getAmountOwned(string $auth_id, string $symbol): ?int
+    {
+        $amountOwned = $this->queryBuilder
+            ->select('amount')
+            ->from('stocks')
+            ->where('user_id = ?')
+            ->andWhere('symbol = ?')
+            ->setParameter(0, $auth_id)
+            ->setParameter(1, $symbol)
+            ->fetchOne();
+        return $amountOwned ?: null;
+    }
+
+    public function subtractMoney(string $auth_id, float $transactionPrice): void
+    {
+        $user = $this->getByID($auth_id);
+        $moneyLeft = $user['money'] - $transactionPrice;
+        $this->queryBuilder->update('users')
+            ->set('money', '?')
+            ->where('id = ?')
+            ->setParameter(0, $moneyLeft)
+            ->setParameter(1, $auth_id)
+            ->executeQuery();
+    }
+
+    public function addMoney(string $auth_id, float $transactionPrice): void
+    {
+        $user = $this->getByID($auth_id);
+        $moneyLeft = $user['money'] + $transactionPrice;
+        $this->queryBuilder->update('users')
+            ->set('money', '?')
+            ->where('id = ?')
+            ->setParameter(0, $moneyLeft)
+            ->setParameter(1, $auth_id)
+            ->executeQuery();
+    }
 }

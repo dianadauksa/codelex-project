@@ -35,11 +35,19 @@
                                 <div class="font-bold text-lg">Current price: ${{ stock.currentPrice|number_format(2) }}</div>
                                 <div>
                                     <form action="/buy" method="post">
+                                        <input type="hidden" name="price" value="{{ stock.currentPrice|number_format(2) }}">
                                         <input type="hidden" name="symbol" value="{{ stock.symbol }}">
                                         <input type="number" name="amount" placeholder="Amount" id="buy-amount">
                                         <input type="submit" value="Buy Stock" class="inline-block rounded-full text-white bg-sky-600 text-xs font-bold mr-1 md:mr-2 mb-2 px-2 md:px-4 py-1">
                                     </form>
                                     <div id="total-price">Total price: $0.00</div>
+                                    {% if errors %}
+                                        {% for error in errors %}
+                                            <p class="font-semibold text-red-600 capitalize lg:text-1xl ml-3">
+                                                X {{ error }}
+                                            </p>
+                                        {% endfor %}
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -64,11 +72,19 @@
                                 <div class="font-bold text-lg">Current price: ${{ stock.currentPrice|number_format(2) }}</div>
                                 <div>
                                     <form action="/sell" method="post">
+                                        <input type="hidden" name="price" value="{{ stock.currentPrice|number_format(2) }}">
                                         <input type="hidden" name="symbol" value="{{ stock.symbol }}">
                                         <input type="number" name="amount" placeholder="Amount" id="sell-amount">
                                         <input type="submit" value="Sell Stock" class="inline-block rounded-full text-white bg-emerald-600 text-xs font-bold mr-1 md:mr-2 mb-2 px-2 md:px-4 py-1">
                                     </form>
                                     <div id="total-sale">Total price: $0.00</div>
+                                    {% if errors %}
+                                        {% for error in errors %}
+                                            <p class="font-semibold text-red-600 capitalize lg:text-1xl ml-3">
+                                                X {{ error }}
+                                            </p>
+                                        {% endfor %}
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>

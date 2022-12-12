@@ -2,12 +2,8 @@
 
 namespace App\Controllers;
 
-use App\Database;
-use App\Redirect;
-use App\Services\Stock\ShowAllStocksService;
-use App\Services\User\UserManagementService;
-use App\StockTransactionValidation;
-use App\View;
+use App\{Database, Redirect, View, StockTransactionValidation};
+use App\Services\{Stock\ShowAllStocksService, User\UserManagementService};
 
 class BuyStockController
 {
@@ -54,6 +50,7 @@ class BuyStockController
                 ->setParameter(2, $_POST['symbol'])
                 ->executeQuery();
         }
+        $service = new UserManagementService();
         $service->subtractMoney($_SESSION['auth_id'], $_POST['amount'] * $_POST['price']);
         return new Redirect('/portfolio');
     }

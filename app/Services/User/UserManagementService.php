@@ -39,6 +39,11 @@ class UserManagementService
         return $this->usersRepository->getAmountOwned($auth_id, $symbol);
     }
 
+    public function getUserStock(int $id, string $symbol): ?array
+    {
+        return $this->usersRepository->getUserStock($id, $symbol);
+    }
+
     public function subtractMoney(string $auth_id, float $transactionPrice): void
     {
         $this->usersRepository->subtractMoney($auth_id, $transactionPrice);
@@ -47,5 +52,15 @@ class UserManagementService
     public function addMoney(string $auth_id, float $transactionPrice): void
     {
         $this->usersRepository->addMoney($auth_id, $transactionPrice);
+    }
+
+    public function getTransactionsByStock(int $id, string $symbol): array
+    {
+        return $this->usersRepository->getTransactionsByStock($id, $symbol);
+    }
+
+    public function getAllTransactions(int $id): array
+    {
+        return $this->usersRepository->getAllTransactions($id);
     }
 }

@@ -1,10 +1,13 @@
 <?php
 
 use App\{Redirect, View};
-use App\ViewVariables\{AuthViewVariables, ErrorViewVariables, MyStocksViewVariables, ViewVariables};
+use App\ViewVariables\{AuthViewVariables,
+    ErrorViewVariables,
+    MyStocksViewVariables,
+    SuccessViewVariables,
+    ViewVariables};
 use Dotenv\Dotenv;
-use Twig\Environment;
-use Twig\Loader\FilesystemLoader;
+use Twig\{Environment, Loader\FilesystemLoader};
 
 require_once 'vendor/autoload.php';
 session_start();
@@ -17,7 +20,8 @@ $twig = new Environment($loader);
 $authVariables = [
     AuthViewVariables::class,
     ErrorViewVariables::class,
-    MyStocksViewVariables::class
+    MyStocksViewVariables::class,
+    SuccessViewVariables::class
 ];
 /** @var ViewVariables $variable */
 foreach ($authVariables as $variable) {
@@ -31,6 +35,8 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $rou
     $route->addRoute('POST', '/buy', ['App\Controllers\BuyStockController', 'buy']);
     $route->addRoute('POST', '/sell', ['App\Controllers\BuyStockController', 'sell']);
     $route->addRoute('GET', '/portfolio', ['App\Controllers\PortfolioController', 'index']);
+    $route->addRoute('GET', '/transactions', ['App\Controllers\TransactionController', 'index']);
+    $route->addRoute('GET', '/transactions-for', ['App\Controllers\TransactionController', 'showTransactions']);
     $route->addRoute('GET', '/register', ['App\Controllers\RegisterController', 'index']);
     $route->addRoute('POST', '/register', ['App\Controllers\RegisterController', 'register']);
     $route->addRoute('GET', '/login', ['App\Controllers\LoginController', 'index']);
@@ -64,6 +70,7 @@ switch ($routeInfo[0]) {
         if ($response instanceof View) {
             echo $twig->render($response->getTemplatePath() . '.twig', $response->getProperties());
             unset($_SESSION['errors']);
+            unset($_SESSION['success']);
         }
 
         if ($response instanceof Redirect) {

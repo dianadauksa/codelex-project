@@ -78,6 +78,19 @@ class MySQLUsersRepository implements UsersRepository
         return $amountOwned ?: null;
     }
 
+    public function getUserStock(int $id, string $symbol): ?array
+    {
+        $stock = $this->queryBuilder
+            ->select('*')
+            ->from('stocks')
+            ->where('user_id = ?')
+            ->andWhere('symbol = ?')
+            ->setParameter(0, $id)
+            ->setParameter(1, $symbol)
+            ->fetchAssociative();
+        return $stock ?: null;
+    }
+
     public function subtractMoney(string $auth_id, float $transactionPrice): void
     {
         $user = $this->getByID($auth_id);
@@ -100,5 +113,29 @@ class MySQLUsersRepository implements UsersRepository
             ->setParameter(0, $moneyLeft)
             ->setParameter(1, $auth_id)
             ->executeQuery();
+    }
+
+    public function getTransactionsByStock(int $id, string $symbol): ?array
+    {
+        $transactions = $this->queryBuilder
+            ->select('*')
+            ->from('transactions')
+            ->where('user_id = ?')
+            ->andWhere('symbol = ?')
+            ->setParameter(0, $id)
+            ->setParameter(1, $symbol)
+            ->fetchAllAssociative();
+        return $transactions ?: [];
+    }
+
+    public function getAllTransactions(int $id): ?array
+    {
+        $transactions = $this->queryBuilder
+            ->select('*')
+            ->from('transactions')
+            ->where('user_id = ?')
+            ->setParameter(0, $id)
+            ->fetchAllAssociative();
+        return $transactions ?: [];
     }
 }

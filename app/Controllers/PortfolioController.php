@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Services\User\UserManagementService;
+use App\Services\UserStock\ShowUserStocksService;
 use App\View;
 
 class PortfolioController
@@ -11,11 +12,12 @@ class PortfolioController
     {
         $service = new UserManagementService();
         $portfolio = $service->getUserStocks($_SESSION['auth_id']);
-        $_SESSION['portfolio'] = $portfolio;
-        return new View("myStocks", ['portfolio' => $portfolio]);
+        $stockSymbols = [];
+        foreach($portfolio as $userStock) {
+            $stockSymbols[] = $userStock['symbol'];
+        }
+        $service = new ShowUserStocksService();
+        $userStocks = $service->execute($stockSymbols);
+        return new View("portfolio", ['portfolio' => $userStocks->getAllUserStocks()]);
     }
 }
-
-/* array with 2 arrays
-[["id"=> "1", "symbol"=> "TSLA", "amount"=> "5", "user_id"=> "1"],
-    ["id"=> "2", "symbol"=> "AAPL", "amount"=> "2", "user_id"=> "1"]] */

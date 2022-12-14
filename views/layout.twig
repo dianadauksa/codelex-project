@@ -19,7 +19,7 @@
                     <div class="md:flex justify-around space-x-4">
                         <a href="/" class="hover:text-sky-600 text-gray-700">Home</a>
                         {% if auth %}
-                            <a href="/portfolio" class="hover:text-sky-600 text-gray-700">My Portfolio</a>
+                            <a href="/portfolio" class="hover:text-sky-600 text-gray-700">Portfolio</a>
                             <a href="/transactions" class="hover:text-sky-600 text-gray-700">Transactions</a>
                         {% endif %}
                     </div>
@@ -27,7 +27,7 @@
                 {% if auth %}
                     <div class="flex space-x-4 items-center">
                         <p class="text-sky-500 font-semibold">
-                            Hi, {{ auth.name }}! Money available to invest: ${{ auth.money|number_format(2) }}
+                            Hi, {{ auth.name }}! Money available: ${{ auth.money|number_format(2) }}
                         </p>
                         <a href="/logout" class="bg-sky-600 px-4 py-2 rounded text-white hover:bg-sky-500 text-sm">LOGOUT</a>
                     </div>

@@ -43,7 +43,7 @@ class BuyStockController
                 ->setParameter(3, $_POST['price'])
                 ->executeQuery();
         } else {
-            $newAvgPrice = ($stock['amount']* $stock['avg_price'] + $_POST['amount']*$_POST['price'])/($_POST['amount']+$stock['amount']);
+            $newAvgPrice = ($stock['amount'] * $stock['avg_price'] + $_POST['amount'] * $_POST['price']) / ($_POST['amount'] + $stock['amount']);
             $queryBuilder->update('stocks')
                 ->set('avg_price', '?')
                 ->set('amount', 'amount + ?')

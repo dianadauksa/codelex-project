@@ -1,14 +1,14 @@
 {% extends 'layout.twig' %}
 {% block content %}
     <div class="bg-gray-100 text-gray-800">
-        <div><h1 class="text-center text-lg font-bold text-2xl py-2">Choose your stock:</h1></div>
+        <div><h1 class="text-center text-lg font-bold text-2xl py-2 mb-1">Sort by stock:</h1></div>
         <div class="flex justify-center mx-auto">
             {% for stock in portfolio %}
                 {% if (symbol == stock) %}
-                <a href="/transactions-for?symbol={{ stock }}"
-                   class="rounded-full text-white bg-sky-500 text-lg font-bold mr-1 md:mr-2 mb-2 px-2 md:px-4 py-1">
-                    {{ stock }}
-                </a>
+                    <a href="/transactions-for?symbol={{ stock }}"
+                       class="rounded-full text-white bg-sky-500 text-lg font-bold mr-1 md:mr-2 mb-2 px-2 md:px-4 py-1">
+                        {{ stock }}
+                    </a>
                 {% else %}
                     <a href="/transactions-for?symbol={{ stock }}"
                        class="rounded-full text-white bg-black text-lg font-bold mr-1 md:mr-2 mb-2 px-2 md:px-4 py-1">
@@ -33,16 +33,24 @@
                 </thead>
                 <tbody>
 
-                    {% for transaction in transactions %}
-                        <tr>
-                            <td class="py-1">{{ transaction.symbol }}</td>
-                            <td class="py-1">{{ transaction.type }}</td>
-                            <td class="py-1">{{ transaction.amount }}</td>
-                            <td class="py-1">{{ transaction.price|number_format(2) }}</td>
-                            <td class="py-1">{{ transaction.total_sum|number_format(2) }}</td>
-                            <td class="py-1">{{ transaction.date }}</td>
-                        </tr>
-                    {% endfor %}
+                {% for transaction in transactions %}
+                    <tr>
+                        <td class="py-1">{{ transaction.symbol }}</td>
+                        {% if (transaction.type == 'BUY') %}
+                            <td class="py-1 text-sky-600">{{ transaction.type }}</td>
+                        {% else %}
+                            <td class="py-1 text-emerald-600">{{ transaction.type }}</td>
+                        {% endif %}
+                        <td class="py-1">{{ transaction.amount }}</td>
+                        <td class="py-1">{{ transaction.price|number_format(2) }}</td>
+                        {% if (transaction.type == 'BUY') %}
+                            <td class="py-1 text-sky-600">{{ transaction.total_sum|number_format(2) }}</td>
+                        {% else %}
+                            <td class="py-1 text-emerald-600">{{ transaction.total_sum|number_format(2) }}</td>
+                        {% endif %}
+                        <td class="py-1">{{ transaction.date }}</td>
+                    </tr>
+                {% endfor %}
                 {% endif %}
                 </tbody>
             </table>

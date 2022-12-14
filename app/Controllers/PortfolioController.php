@@ -11,13 +11,24 @@ class PortfolioController
     public function index(): View
     {
         $service = new UserManagementService();
-        $portfolio = $service->getUserStocks($_SESSION['auth_id']);
+        $userStockList = $service->getUserStocks($_SESSION['auth_id']);
         $stockSymbols = [];
-        foreach($portfolio as $userStock) {
+        foreach($userStockList as $userStock) {
             $stockSymbols[] = $userStock['symbol'];
         }
+
         $service = new ShowUserStocksService();
         $userStocks = $service->execute($stockSymbols);
-        return new View("portfolio", ['portfolio' => $userStocks->getAllUserStocks()]);
+        $portfolio = $userStocks->getAllUserStocks();
+        $totalProfit = 0;
+        $totalValue = 0;
+        foreach($portfolio as $stock) {
+            $totalProfit += $stock->getChange();
+            $totalValue += $stock->getCurrentPrice() * $stock->getAmountOwned();
+        }
+        return new View("portfolio", [
+            'portfolio' => $portfolio,
+            'totalProfit' => $totalProfit,
+            'totalValue' => $totalValue]);
     }
 }

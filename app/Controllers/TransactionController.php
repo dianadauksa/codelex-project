@@ -13,7 +13,7 @@ class TransactionController
         $service = new UserManagementService();
         $transactions = $service->getAllTransactions($_SESSION['auth_id']);
 
-        return new View("transactions", ['transactions' => $transactions,'portfolio' => $portfolio]);
+        return new View("transactions", ['transactions' => $transactions, 'portfolio' => $portfolio]);
     }
 
     public function showTransactions(): View

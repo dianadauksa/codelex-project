@@ -29,6 +29,7 @@ class BuyStockController
         $service = new UserManagementService();
         $stock = $service->getUserStock($_SESSION['auth_id'], $_POST['symbol']);
         $userAmountOfStock = $stock['amount'];
+
         if ($userAmountOfStock == null) {
             $queryBuilder->insert('stocks')
                 ->values([
@@ -55,26 +56,10 @@ class BuyStockController
                 ->setParameter(3, $_POST['symbol'])
                 ->executeQuery();
         }
+
         $service = new UserManagementService();
         $service->subtractMoney($_SESSION['auth_id'], $_POST['amount'] * $_POST['price']);
-        $queryBuilder->insert('transactions')
-            ->values([
-                'user_id' => '?',
-                'type' => '?',
-                'symbol' => '?',
-                'amount' => '?',
-                'price' => '?',
-                'total_sum' => '?',
-                'date' => '?',
-            ])
-            ->setParameter(0, $_SESSION['auth_id'])
-            ->setParameter(1, 'BUY')
-            ->setParameter(2, $_POST['symbol'])
-            ->setParameter(3, $_POST['amount'])
-            ->setParameter(4, $_POST['price'])
-            ->setParameter(5, $_POST['amount'] * $_POST['price'])
-            ->setParameter(6, date('Y-m-d H:i:s'))
-            ->executeQuery();
+        $this->insertTransaction('BUY', $_POST);
 
         $total = $_POST['amount'] * $_POST['price'];
         $_SESSION['success']['purchase'] =
@@ -95,6 +80,7 @@ class BuyStockController
 
         $service = new UserManagementService();
         $userAmountOfStock = $service->getAmountOwned($_SESSION['auth_id'], $_POST['symbol']);
+
         if ($userAmountOfStock == $_POST['amount']) {
             $queryBuilder
                 ->delete('stocks')
@@ -112,6 +98,18 @@ class BuyStockController
 
         $service = new UserManagementService();
         $service->addMoney($_SESSION['auth_id'], $_POST['amount'] * $_POST['price']);
+        $this->insertTransaction('SELL', $_POST);
+
+        $total = $_POST['amount'] * $_POST['price'];
+        $_SESSION['success']['sale'] =
+            "You have successfully sold {$_POST['amount']} shares of {$_POST['symbol']} for $ {$total}";
+        return new Redirect('/stock?symbol=' . $_POST['symbol']);
+    }
+
+    private function insertTransaction(string $type, array $post): void
+    {
+        $connection = Database::getConnection();
+        $queryBuilder = $connection->createQueryBuilder();
         $queryBuilder->insert('transactions')
             ->values([
                 'user_id' => '?',
@@ -123,17 +121,12 @@ class BuyStockController
                 'date' => '?',
             ])
             ->setParameter(0, $_SESSION['auth_id'])
-            ->setParameter(1, 'SELL')
-            ->setParameter(2, $_POST['symbol'])
-            ->setParameter(3, $_POST['amount'])
-            ->setParameter(4, $_POST['price'])
-            ->setParameter(5, $_POST['amount'] * $_POST['price'])
+            ->setParameter(1, $type)
+            ->setParameter(2, $post['symbol'])
+            ->setParameter(3, $post['amount'])
+            ->setParameter(4, $post['price'])
+            ->setParameter(5, $post['amount'] * $post['price'])
             ->setParameter(6, date('Y-m-d H:i:s'))
             ->executeQuery();
-
-        $total = $_POST['amount'] * $_POST['price'];
-        $_SESSION['success']['sale'] =
-            "You have successfully sold {$_POST['amount']} shares of {$_POST['symbol']} for $ {$total}";
-        return new Redirect('/stock?symbol=' . $_POST['symbol']);
     }
 }

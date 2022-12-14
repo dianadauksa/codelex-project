@@ -13,7 +13,7 @@ class PortfolioController
         $service = new UserManagementService();
         $userStockList = $service->getUserStocks($_SESSION['auth_id']);
         $stockSymbols = [];
-        foreach($userStockList as $userStock) {
+        foreach ($userStockList as $userStock) {
             $stockSymbols[] = $userStock['symbol'];
         }
 
@@ -22,7 +22,7 @@ class PortfolioController
         $portfolio = $userStocks->getAllUserStocks();
         $totalProfit = 0;
         $totalValue = 0;
-        foreach($portfolio as $stock) {
+        foreach ($portfolio as $stock) {
             $totalProfit += $stock->getChange();
             $totalValue += $stock->getCurrentPrice() * $stock->getAmountOwned();
         }

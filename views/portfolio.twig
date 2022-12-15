@@ -26,17 +26,17 @@
                                         </a>
                                         {% if (stock.change >= 0) %}
                                             <button class="inline-block rounded-full text-white bg-emerald-600 text-xs font-bold mr-1 md:mr-2 mb-2 px-2 md:px-4 py-1">
-                                                P/L: ▲${{ stock.change|number_format(2) }}
+                                                ▲${{ stock.change|number_format(2) }}
                                             </button>
                                         {% else %}
                                             <button class="inline-block rounded-full text-white bg-red-600 text-xs font-bold mr-1 md:mr-2 mb-2 px-2 md:px-4 py-1">
-                                                P/L: ▼${{ stock.change|number_format(2) }}
+                                                ▼${{ stock.change|number_format(2) }}
                                             </button>
                                         {% endif %}
                                         <p><span class="text-emerald-600">{{ stock.amountOwned }} stocks</span></p>
                                     </div>
                                 </div>
-                                <div class="font-medium text-md">CP: <span
+                                <div class="font-medium text-md"><span
                                             class="font-bold">${{ stock.currentPrice|number_format(2) }}</span></div>
                                 <div class="flex"><p>
                                         Value:

@@ -37,6 +37,9 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $rou
     $route->addRoute('GET', '/portfolio', ['App\Controllers\PortfolioController', 'index']);
     $route->addRoute('GET', '/transactions', ['App\Controllers\TransactionController', 'index']);
     $route->addRoute('GET', '/transactions-for', ['App\Controllers\TransactionController', 'showTransactions']);
+    $route->addRoute('GET', '/friends', ['App\Controllers\FriendsController', 'index']);
+    $route->addRoute('GET', '/friend', ['App\Controllers\FriendsController', 'singleFriend']);
+    $route->addRoute('POST', '/send', ['App\Controllers\FriendsController', 'sendStock']);
     $route->addRoute('GET', '/register', ['App\Controllers\RegisterController', 'index']);
     $route->addRoute('POST', '/register', ['App\Controllers\RegisterController', 'register']);
     $route->addRoute('GET', '/login', ['App\Controllers\LoginController', 'index']);

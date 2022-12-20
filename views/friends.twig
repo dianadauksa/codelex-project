@@ -1,0 +1,42 @@
+{% extends 'layout.twig' %}
+{% block content %}
+    <div class="flex items-center bg-gray-100 text-gray-800">
+        <div class="p-4 w-full">
+            <div class="flex justify-center mb-4">
+                <h1 class="text-center text-lg font-bold text-2xl py-2">Your Friends</h1>
+            </div>
+            <div class="grid grid-cols-12 gap-4">
+
+                {% for friend in friends %}
+                    <div class="col-span-12 sm:col-span-6 md:col-span-3">
+                        <div class="flex flex-row bg-white shadow-sm rounded p-4">
+                            <div class="flex flex-col flex-grow ml-4">
+                                <div class="text-sm text-gray-500">
+                                    <div>
+                                        <a href="/friend?id={{ friend.id }}"
+                                           class="inline-block rounded-full text-white bg-black text-sm font-bold mr-1 md:mr-2 mb-2 px-2 md:px-4 py-1">
+                                            {{ friend.name }}
+                                        </a>
+                                            <a href="/friend?id={{ friend.id }}"
+                                               class="inline-block rounded-full text-white bg-gradient-to-r from-purple-600 to-sky-500 text-sm font-bold mr-1 md:mr-2 mb-2 px-2 md:px-4 py-1">
+                                                Send a gift!
+                                            </a>
+                                    </div>
+                                    {% set parts = friend.email|split('@') %}
+                                    {% set username = parts[0] %}
+                                    {% set domain = parts[1] %}
+                                    {% set hiddenDomain = domain|replace({ (domain|raw): '******' }) %}
+                                    {% set hiddenEmail = username ~ '@' ~ hiddenDomain %}
+                                    <div class="font-semibold text-lg">{{ hiddenEmail }}</div>
+                                </div>
+
+                            </div>
+                            <img src="../styles/person.png" alt="avatar" class="inline-flex w-20 h-20 rounded-full">
+                        </div>
+                    </div>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

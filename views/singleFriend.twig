@@ -1,0 +1,59 @@
+{% extends 'layout.twig' %}
+{% block content %}
+    <div class="flex items-center bg-gray-100 text-gray-800">
+        <div class="p-4 w-full">
+            <div class="flex justify-center mb-4">
+                <h1 class="text-center text-lg font-bold text-2xl py-2">Send a stocky gift!</h1>
+            </div>
+            {% if errors %}
+                {% for error in errors %}
+                    <p class="text-center font-semibold text-red-600 capitalize lg:text-1xl ml-3">
+                        X {{ error }}
+                    </p>
+                {% endfor %}
+            {% endif %}
+            {% if success %}
+                {% for each in success %}
+                    <p class="text-center font-semibold text-green-600 capitalize lg:text-1xl ml-3">
+                        ✓ {{ each }} {{ friend.name }}
+                    </p>
+                {% endfor %}
+            {% endif %}
+            <div class="mx-auto max-w-sm rounded shadow-lg">
+                <div class="flex flex-col bg-white p-4">
+                    <div class="flex justify-center mb-4">
+                        <img src="../styles/person.png" alt="avatar" class="w-20 h-20 rounded-full">
+                    </div>
+                    <div class="flex flex-col flex-grow">
+                        <div class="text-sm text-gray-500">
+                            <div class="flex justify-center">
+                                <p class="inline-block rounded-full text-white bg-black text-sm font-bold md:mb-2 px-2 md:px-4 py-1">
+                                    {{ friend.name }}
+                                </p>
+                                {% set parts = friend.email|split('@') %}
+                                {% set username = parts[0] %}
+                                {% set domain = parts[1] %}
+                                {% set hiddenDomain = domain|replace({ (domain|raw): '******' }) %}
+                                {% set hiddenEmail = username ~ '@' ~ hiddenDomain %}
+                            </div>
+                            <p class="flex justify-center mb-4 font-semibold text-lg">{{ hiddenEmail }}</p>
+                        </div>
+                    </div>
+                    <div class="flex justify-center">
+                        <form action="/send" method="post">
+                            <div class="flex flex-col items-center">
+                                <input type="hidden" name="friend_id" value={{ friend.id }}>
+                                <input type="text" name="symbol" placeholder="Stock Symbol" id="stock-symbol"
+                                       class="rounded-md border-2 border-gray-400 py-2 px-4 block w-2/3">
+                                <input type="number" name="amount" placeholder="Amount" id="buy-amount"
+                                       class="rounded-md border-2 border-gray-400 py-2 px-4 block w-2/3 my-2">
+                                <input type="submit" value="Send Stocks"
+                                       class="text-center rounded-full text-white bg-gradient-to-r from-purple-600 to-sky-500 hover:shadow-lg text-sm font-bold md:mb-2 px-2 md:px-4 py-1">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

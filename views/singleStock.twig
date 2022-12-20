@@ -2,6 +2,20 @@
 {% block content %}
     <div class="flex items-center bg-gray-100 text-gray-800">
         <div class="p-4 w-full">
+            {% if errors %}
+                {% for error in errors %}
+                    <p class="font-semibold text-red-600 capitalize lg:text-1xl ml-3">
+                        X {{ error }}
+                    </p>
+                {% endfor %}
+            {% endif %}
+            {% if success %}
+                {% for each in success %}
+                    <p class="font-semibold text-green-600 capitalize lg:text-1xl ml-3">
+                        ✓ {{ each }}
+                    </p>
+                {% endfor %}
+            {% endif %}
             <div class="grid grid-cols-12 gap-4">
 
                 {% for stock in stocks %}
@@ -88,20 +102,6 @@
                         });
                     </script>
                 {% endfor %}
-                {% if errors %}
-                    {% for error in errors %}
-                        <p class="font-semibold text-red-600 capitalize lg:text-1xl ml-3">
-                            X {{ error }}
-                        </p>
-                    {% endfor %}
-                {% endif %}
-                {% if success %}
-                    {% for each in success %}
-                        <p class="font-semibold text-green-600 capitalize lg:text-1xl ml-3">
-                            ✓ {{ each }}
-                        </p>
-                    {% endfor %}
-                {% endif %}
             </div>
         </div>
     </div>

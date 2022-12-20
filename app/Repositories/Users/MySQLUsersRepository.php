@@ -138,4 +138,13 @@ class MySQLUsersRepository implements UsersRepository
             ->fetchAllAssociative();
         return $transactions ?: [];
     }
+
+    public function getAllUsers(): ?array
+    {
+        $users = $this->queryBuilder
+            ->select('*')
+            ->from('users')
+            ->fetchAllAssociative();
+        return $users ?: [];
+    }
 }

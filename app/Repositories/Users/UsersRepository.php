@@ -16,4 +16,5 @@ interface UsersRepository
     public function addMoney(int $id, float $transactionPrice): void;
     public function getTransactionsByStock(int $id, string $symbol): ?array;
     public function getAllTransactions(int $id): ?array;
+    public function getAllUsers(): ?array;
 }

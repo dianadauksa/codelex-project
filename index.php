@@ -78,7 +78,6 @@ switch ($routeInfo[0]) {
         $container = new Container();
         $container->set(UserStocksRepository::class, DI\create(FinnhubAPIUserStocksRepository::class));
 
-
         $response = $container->get($controller)->{$method}($vars);
         if ($response instanceof View) {
             echo $twig->render($response->getTemplatePath() . '.twig', $response->getProperties());

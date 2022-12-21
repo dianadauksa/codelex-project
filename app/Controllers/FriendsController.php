@@ -14,10 +14,11 @@ class FriendsController
         return new View("friends", ['friends' => $friends]);
     }
 
-    public function singleFriend(): View
+    public function singleFriend(array $vars): View
     {
+        $friendID = (int) $vars['id'];
         $service = new ShowFriendsService();
-        $friend = $service->executeSingle($_GET['id']);
+        $friend = $service->executeSingle($friendID);
         return new View("singleFriend", ['friend' => $friend]);
     }
 

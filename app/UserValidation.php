@@ -42,7 +42,7 @@ class UserValidation
     private function validateNewEmail(array $post): void
     {
         $service = new UserManagementService();
-        $userExists = $service->getUserByEmail($_POST['email']);
+        $userExists = $service->getUserByEmail($post['email']);
 
         if ($userExists) {
             $_SESSION['errors']['email'] = 'Invalid email address';

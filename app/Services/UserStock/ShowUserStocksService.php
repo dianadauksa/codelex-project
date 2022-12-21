@@ -2,9 +2,9 @@
 
 namespace App\Services\UserStock;
 
+use App\Database;
 use App\Models\Collections\UserStocksCollection;
-use App\Repositories\UserStocks\FinnhubAPIUserStocksRepository;
-use App\Repositories\UserStocks\UserStocksRepository;
+use App\Repositories\UserStocks\{UserStocksRepository, FinnhubAPIUserStocksRepository};
 
 class ShowUserStocksService
 {
@@ -14,8 +14,26 @@ class ShowUserStocksService
         $this->stocksRepository = new FinnhubAPIUserStocksRepository();
     }
 
-    public function execute(array $stockSymbols): UserStocksCollection
+    public function execute(int $id): UserStocksCollection
     {
+        $stockSymbols = [];
+        $userStocks = $this->getUserStocks($id);
+        foreach ($userStocks as $userStock) {
+            $stockSymbols[] = $userStock['symbol'];
+        }
         return $this->stocksRepository->getAll($stockSymbols);
+    }
+
+    private function getUserStocks(int $id): array
+    {
+        $connection = Database::getConnection();
+        $queryBuilder = $connection->createQueryBuilder();
+        $userStocks = $queryBuilder
+            ->select('*')
+            ->from('stocks')
+            ->where('user_id = ?')
+            ->setParameter(0, $id)
+            ->fetchAllAssociative();
+        return $userStocks ?: [];
     }
 }

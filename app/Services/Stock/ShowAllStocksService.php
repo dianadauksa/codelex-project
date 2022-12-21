@@ -2,9 +2,8 @@
 
 namespace App\Services\Stock;
 
-use App\Models\Collections\StocksCollection;
-use App\Repositories\Stocks\FinnhubAPIStocksRepository;
-use App\Repositories\Stocks\StocksRepository;
+use App\Models\{Stock, Collections\StocksCollection};
+use App\Repositories\Stocks\{FinnhubAPIStocksRepository, StocksRepository};
 
 class ShowAllStocksService
 {
@@ -17,5 +16,10 @@ class ShowAllStocksService
     public function execute(array $stockSymbols): StocksCollection
     {
         return $this->stocksRepository->getAll($stockSymbols);
+    }
+
+    public function executeSingle(string $stockSymbol): Stock
+    {
+        return $this->stocksRepository->getSingle($stockSymbol);
     }
 }

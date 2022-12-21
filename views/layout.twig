@@ -27,7 +27,7 @@
                 </div>
                 {% if auth %}
                     <div class="flex space-x-4 items-center">
-                        <p class="text-sky-500 font-semibold">
+                        <p class="text-sky-500 font-normal">
                             Hi, {{ auth.name }}! Money available: ${{ auth.money|number_format(2) }}
                         </p>
                         <a href="/logout" class="bg-sky-600 px-4 py-2 rounded text-white hover:bg-sky-500 text-sm">LOGOUT</a>

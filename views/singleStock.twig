@@ -18,7 +18,6 @@
             {% endif %}
             <div class="grid grid-cols-12 gap-4">
 
-                {% for stock in stocks %}
                     <div class="col-span-12 sm:col-span-6 md:col-span-3">
                         <div class="flex flex-row bg-white shadow-sm rounded p-4">
                             <div class="flex flex-col flex-grow ml-4">
@@ -92,7 +91,6 @@
                             </div>
                         </div>
                     </div>
-
                     <script>
                         let saleAmountInput = document.getElementById('sell-amount');
                         let totalSale = document.getElementById('total-sale');
@@ -101,7 +99,45 @@
                             totalSale.innerHTML = 'Total earnings: $' + totalSaleAmount.toFixed(2);
                         });
                     </script>
-                {% endfor %}
+            </div>
+
+            {% if transactions %}
+            <div class="flex justify-center p-4">
+                <h1 class="text-center text-lg font-bold text-2xl">Your Transaction History With {{ stock.symbol }}</h1>
+            </div>
+            <div class="flex justify-center text-center mx-auto">
+                <table class="w-4/5 mt-3">
+                    <thead>
+                    <tr class="bg-gray-300">
+                        <th class="py-2 px-3">Transaction</th>
+                        <th class="py-2 px-3">Amount</th>
+                        <th class="py-2 px-3">Stock Price</th>
+                        <th class="py-2 px-3">Total Sum</th>
+                        <th class="py-2 px-3">Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {% for transaction in transactions %}
+                        <tr>
+                            {% if (transaction.type == 'BUY') %}
+                                <td class="py-1 text-sky-600">{{ transaction.type }}</td>
+                            {% else %}
+                                <td class="py-1 text-emerald-600">{{ transaction.type }}</td>
+                            {% endif %}
+                            <td class="py-1">{{ transaction.amount }}</td>
+                            <td class="py-1">{{ transaction.price|number_format(2) }}</td>
+                            {% if (transaction.type == 'BUY') %}
+                                <td class="py-1 text-sky-600">{{ transaction.total_sum|number_format(2) }}</td>
+                            {% else %}
+                                <td class="py-1 text-emerald-600">{{ transaction.total_sum|number_format(2) }}</td>
+                            {% endif %}
+                            <td class="py-1">{{ transaction.date }}</td>
+                        </tr>
+                    {% endfor %}
+                    {% endif %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

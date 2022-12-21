@@ -20,7 +20,7 @@ class UserStocksCollection
         $this->stocks[] = $stock;
     }
 
-    public function getAllUserStocks(): array
+    public function getAll(): array
     {
         return $this->stocks;
     }

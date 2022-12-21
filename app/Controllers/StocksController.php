@@ -5,7 +5,7 @@ namespace App\Controllers;
 use App\Services\Stock\ShowAllStocksService;
 use App\View;
 
-class StockController
+class StocksController
 {
     public function index(): View
     {

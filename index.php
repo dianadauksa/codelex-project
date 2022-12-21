@@ -30,13 +30,13 @@ foreach ($authVariables as $variable) {
 }
 
 $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $route) {
-    $route->addRoute('GET', '/', ['App\Controllers\StockController', 'index']);
-    $route->addRoute('GET', '/stock', ['App\Controllers\BuyStockController', 'index']);
-    $route->addRoute('POST', '/buy', ['App\Controllers\BuyStockController', 'buy']);
-    $route->addRoute('POST', '/sell', ['App\Controllers\BuyStockController', 'sell']);
+    $route->addRoute('GET', '/', ['App\Controllers\StocksController', 'index']);
+    $route->addRoute('GET', '/stock', ['App\Controllers\SingleStockController', 'index']);
+    $route->addRoute('POST', '/buy', ['App\Controllers\SingleStockController', 'buy']);
+    $route->addRoute('POST', '/sell', ['App\Controllers\SingleStockController', 'sell']);
     $route->addRoute('GET', '/portfolio', ['App\Controllers\PortfolioController', 'index']);
     $route->addRoute('GET', '/transactions', ['App\Controllers\TransactionController', 'index']);
-    $route->addRoute('GET', '/transactions-for', ['App\Controllers\TransactionController', 'showTransactions']);
+    $route->addRoute('GET', '/transactions-for', ['App\Controllers\TransactionController', 'showTransactionsForStock']);
     $route->addRoute('GET', '/friends', ['App\Controllers\FriendsController', 'index']);
     $route->addRoute('GET', '/friend', ['App\Controllers\FriendsController', 'singleFriend']);
     $route->addRoute('POST', '/send', ['App\Controllers\FriendsController', 'sendStock']);

@@ -4,8 +4,7 @@ namespace App\Repositories\Users;
 
 use App\Database;
 use App\Services\User\RegisterUserServiceRequest;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Query\QueryBuilder;
+use Doctrine\DBAL\{Connection, Query\QueryBuilder};
 
 class MySQLUsersRepository implements UsersRepository
 {
@@ -54,17 +53,6 @@ class MySQLUsersRepository implements UsersRepository
         return $user ?: null;
     }
 
-    public function getUserStocks(int $id): ?array
-    {
-        $portfolio = $this->queryBuilder
-            ->select('*')
-            ->from('stocks')
-            ->where('user_id = ?')
-            ->setParameter(0, $id)
-            ->fetchAllAssociative();
-        return $portfolio ?: [];
-    }
-
     public function getAmountOwned(int $id, string $symbol): ?int
     {
         $amountOwned = $this->queryBuilder
@@ -89,54 +77,6 @@ class MySQLUsersRepository implements UsersRepository
             ->setParameter(1, $symbol)
             ->fetchAssociative();
         return $stock ?: null;
-    }
-
-    public function subtractMoney(int $id, float $transactionPrice): void
-    {
-        $user = $this->getByID($id);
-        $moneyLeft = $user['money'] - $transactionPrice;
-        $this->queryBuilder->update('users')
-            ->set('money', '?')
-            ->where('id = ?')
-            ->setParameter(0, $moneyLeft)
-            ->setParameter(1, $id)
-            ->executeQuery();
-    }
-
-    public function addMoney(int $id, float $transactionPrice): void
-    {
-        $user = $this->getByID($id);
-        $moneyLeft = $user['money'] + $transactionPrice;
-        $this->queryBuilder->update('users')
-            ->set('money', '?')
-            ->where('id = ?')
-            ->setParameter(0, $moneyLeft)
-            ->setParameter(1, $id)
-            ->executeQuery();
-    }
-
-    public function getTransactionsByStock(int $id, string $symbol): ?array
-    {
-        $transactions = $this->queryBuilder
-            ->select('*')
-            ->from('transactions')
-            ->where('user_id = ?')
-            ->andWhere('symbol = ?')
-            ->setParameter(0, $id)
-            ->setParameter(1, $symbol)
-            ->fetchAllAssociative();
-        return $transactions ?: [];
-    }
-
-    public function getAllTransactions(int $id): ?array
-    {
-        $transactions = $this->queryBuilder
-            ->select('*')
-            ->from('transactions')
-            ->where('user_id = ?')
-            ->setParameter(0, $id)
-            ->fetchAllAssociative();
-        return $transactions ?: [];
     }
 
     public function getAllUsers(): ?array

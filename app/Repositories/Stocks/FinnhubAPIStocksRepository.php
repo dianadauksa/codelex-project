@@ -11,6 +11,7 @@ class FinnhubAPIStocksRepository implements StocksRepository
     public function getAll(array $stockSymbols): StocksCollection
     {
         //  /stock/profile2?symbol=AAPL returns company data
+        // /search?q=AAPL Query text can be symbol, name, isin, or cusip
         //  /quote?symbol=AAPL
         $apiKey = $_ENV["API_KEY"];
         $baseUrl = $_ENV["BASE_URL"];
@@ -31,6 +32,23 @@ class FinnhubAPIStocksRepository implements StocksRepository
                 $quoteData->c-$quoteData->pc));
         }
         return $stocks;
+    }
+
+    public function getSingle(string $stockSymbol): Stock
+    {
+        $apiKey = $_ENV["API_KEY"];
+        $baseUrl = $_ENV["BASE_URL"];
+        $endPoint = "/quote?symbol=";
+
+        $client = new Client();
+        $query = "{$stockSymbol}&token=" . $apiKey;
+        $quoteUrl = $baseUrl . $endPoint . $query;
+        $quoteResponse = $client->request('GET', $quoteUrl);
+        $quoteData = json_decode($quoteResponse->getBody()->getContents());
+        return new Stock(
+            $stockSymbol,
+            $quoteData->c,
+            $quoteData->c-$quoteData->pc);
     }
 }
 

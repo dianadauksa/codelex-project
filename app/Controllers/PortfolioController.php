@@ -7,10 +7,17 @@ use App\View;
 
 class PortfolioController
 {
+    private ShowUserStocksService $service;
+
+    public function __construct(ShowUserStocksService $service)
+    {
+        $this->service = $service;
+    }
+
     public function index(): View
     {
-        $service = new ShowUserStocksService();
-        $userStocks = $service->execute($_SESSION['auth_id']);
+        //$service = new ShowUserStocksService(); updated to use DI
+        $userStocks = $this->service->execute($_SESSION['auth_id']);
         $portfolio = $userStocks->getAll();
 
         $totalProfit = 0;

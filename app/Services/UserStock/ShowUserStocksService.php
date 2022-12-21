@@ -9,9 +9,9 @@ use App\Repositories\UserStocks\{UserStocksRepository, FinnhubAPIUserStocksRepos
 class ShowUserStocksService
 {
     private UserStocksRepository $stocksRepository;
-    public function __construct()
+    public function __construct(UserStocksRepository $repository)
     {
-        $this->stocksRepository = new FinnhubAPIUserStocksRepository();
+        $this->stocksRepository = $repository;
     }
 
     public function execute(int $id): UserStocksCollection

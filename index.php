@@ -1,11 +1,17 @@
 <?php
 
-use App\{Redirect, View};
+use DI\Container;
+use App\{Redirect,
+    Repositories\UserStocks\FinnhubAPIUserStocksRepository,
+    Repositories\UserStocks\UserStocksRepository,
+    View
+};
 use App\ViewVariables\{AuthViewVariables,
     ErrorViewVariables,
     MyStocksViewVariables,
     SuccessViewVariables,
-    ViewVariables};
+    ViewVariables
+};
 use Dotenv\Dotenv;
 use Twig\{Environment, Loader\FilesystemLoader};
 
@@ -69,7 +75,11 @@ switch ($routeInfo[0]) {
 
         [$controller, $method] = $handler;
 
-        $response = (new $controller)->{$method}($vars);
+        $container = new Container();
+        $container->set(UserStocksRepository::class, DI\create(FinnhubAPIUserStocksRepository::class));
+
+
+        $response = $container->get($controller)->{$method}($vars);
         if ($response instanceof View) {
             echo $twig->render($response->getTemplatePath() . '.twig', $response->getProperties());
             unset($_SESSION['errors']);

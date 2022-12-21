@@ -19,22 +19,34 @@ class SellStockService
     public function execute(string $stockSymbol, int $sellAmount, User $user): void
     {
         $userAmountOfStock = $user->getStockBySymbol($stockSymbol)['amount'];
+        $total = $sellAmount * $this->getPrice($stockSymbol);
 
         if ($userAmountOfStock == $sellAmount) {
             $this->deleteStock($stockSymbol, $user);
+            $this->insertTransaction('SELL', $stockSymbol, $sellAmount, $user);
+
+            $_SESSION['success']['sale'] =
+                "Successfully sold $sellAmount shares of $stockSymbol for $ {$total}";
         } elseif ($userAmountOfStock > $sellAmount) {
             $this->updateExistingStock($stockSymbol, $sellAmount, $user);
-        } /*elseif ($userAmountOfStock == null) { //also when already short and want to sell more => update
+            $this->insertTransaction('SELL', $stockSymbol, $sellAmount, $user);
+
+            $_SESSION['success']['sale'] =
+                "Successfully sold $sellAmount shares of $stockSymbol for $ {$total}";
+        } elseif ($userAmountOfStock == null) {
             $this->insertStock($stockSymbol, $sellAmount, $user);
-        }*/
+            $this->insertTransaction('SHORTLIST', $stockSymbol, $sellAmount, $user);
 
+            $_SESSION['success']['short'] =
+                "Successfully shortlisted $sellAmount shares of $stockSymbol for $ {$total}";
+        } elseif ($userAmountOfStock < 0) {
+            $this->updateShortlist($stockSymbol, $sellAmount, $user);
+            $this->insertTransaction('INCREASE SHORTLIST', $stockSymbol, $sellAmount, $user);
+
+            $_SESSION['success']['short'] =
+                "Updated shortlist: $sellAmount additional shares of $stockSymbol for $ {$total}";
+        }
         $this->updateUserMoney($stockSymbol, $sellAmount, $user);
-        $this->insertTransaction($stockSymbol, $sellAmount, $user);
-
-        $total = $sellAmount * $this->getPrice($stockSymbol);
-        $_SESSION['success']['sale'] =
-            "Successfully sold $sellAmount shares of $stockSymbol for $ {$total}";
-
     }
 
     private function getPrice(string $stockSymbol): float
@@ -68,6 +80,24 @@ class SellStockService
             ->executeQuery();
     }
 
+    private function updateShortlist(string $stockSymbol, int $sellAmount, User $user): void
+    {
+        $userStock = $user->getStockBySymbol($stockSymbol);
+        $newAvgPrice = ($sellAmount * $this->getPrice($stockSymbol) - $userStock['amount'] * $userStock['avg_price']) / ($sellAmount - $userStock['amount']);
+
+        $queryBuilder = $this->connection->createQueryBuilder();
+        $queryBuilder->update('stocks')
+            ->set('avg_price', '?')
+            ->set('amount', 'amount - ?')
+            ->where('user_id = ?')
+            ->andWhere('symbol = ?')
+            ->setParameter(0, $newAvgPrice)
+            ->setParameter(1, $sellAmount)
+            ->setParameter(2, $user->getId())
+            ->setParameter(3, $stockSymbol)
+            ->executeQuery();
+    }
+
     private function updateUserMoney(string $stockSymbol, int $sellAmount, User $user): void
     {
         $moneyLeft = $user->getMoney() + $sellAmount * $this->getPrice($stockSymbol);
@@ -80,7 +110,7 @@ class SellStockService
             ->executeQuery();
     }
 
-    private function insertTransaction(string $stockSymbol, int $sellAmount, User $user): void
+    private function insertTransaction(string $type, string $stockSymbol, int $sellAmount, User $user): void
     {
         $queryBuilder = $this->connection->createQueryBuilder();
         $queryBuilder->insert('transactions')
@@ -94,12 +124,29 @@ class SellStockService
                 'date' => '?',
             ])
             ->setParameter(0, $user->getId())
-            ->setParameter(1, 'SELL')
+            ->setParameter(1, $type)
             ->setParameter(2, $stockSymbol)
             ->setParameter(3, $sellAmount)
             ->setParameter(4, $this->getPrice($stockSymbol))
             ->setParameter(5, $sellAmount * $this->getPrice($stockSymbol))
             ->setParameter(6, date('Y-m-d H:i:s'))
+            ->executeQuery();
+    }
+
+    private function insertStock(string $stockSymbol, int $sellAmount, User $user): void
+    {
+        $queryBuilder = $this->connection->createQueryBuilder();
+        $queryBuilder->insert('stocks')
+            ->values([
+                'user_id' => '?',
+                'symbol' => '?',
+                'amount' => '?',
+                'avg_price' => '?',
+            ])
+            ->setParameter(0, $user->getId())
+            ->setParameter(1, $stockSymbol)
+            ->setParameter(2, -$sellAmount)
+            ->setParameter(3, $this->getPrice($stockSymbol))
             ->executeQuery();
     }
 }

@@ -22,16 +22,35 @@ class BuyStockService
 
         if ($userAmountOfStock == null) {
             $this->insertNewStock($stockSymbol, $buyAmount, $user);
-        } else {
+            $this->insertTransaction('BUY', $stockSymbol, $buyAmount, $user);
+
+            $total = $buyAmount * $this->getPrice($stockSymbol);
+            $_SESSION['success']['purchase'] =
+                "Successfully bought $buyAmount shares of $stockSymbol for $ {$total}";
+        } elseif ($userAmountOfStock > 0) {
             $this->updateExistingStock($stockSymbol, $buyAmount, $user);
+            $this->insertTransaction('BUY', $stockSymbol, $buyAmount, $user);
+
+            $total = $buyAmount * $this->getPrice($stockSymbol);
+            $_SESSION['success']['purchase'] =
+                "Successfully bought $buyAmount shares of $stockSymbol for $ {$total}";
+        } elseif ($userAmountOfStock == -$buyAmount) {
+            $this->deleteStock($stockSymbol, $user);
+            $this->insertTransaction('CLOSE SHORTLIST', $stockSymbol, $buyAmount, $user);
+
+            $total = $buyAmount * $this->getPrice($stockSymbol);
+            $_SESSION['success']['purchase'] =
+                "Successfully closed shortlisted $buyAmount shares of $stockSymbol for $ {$total}";
+        } elseif ($userAmountOfStock < 0) {
+            $this->updateShortlist($stockSymbol, $buyAmount, $user);
+            $this->insertTransaction('DECREASE SHORTLIST', $stockSymbol, $buyAmount, $user);
+
+            $total = $buyAmount * $this->getPrice($stockSymbol);
+            $_SESSION['success']['purchase'] =
+                "Updated shortlist: $buyAmount additional shares of $stockSymbol for $ {$total}";
         }
 
         $this->updateUserMoney($stockSymbol, $buyAmount, $user);
-        $this->insertTransaction($stockSymbol, $buyAmount, $user);
-
-        $total = $buyAmount * $this->getPrice($stockSymbol);
-        $_SESSION['success']['purchase'] =
-            "Successfully bought $buyAmount shares of $stockSymbol for $ {$total}";
     }
 
     private function getPrice(string $stockSymbol): float
@@ -76,6 +95,24 @@ class BuyStockService
             ->executeQuery();
     }
 
+    private function updateShortlist(string $stockSymbol, int $buyAmount, User $user): void
+    {
+        $userStock = $user->getStockBySymbol($stockSymbol);
+        $newAvgPrice = ($buyAmount * $this->getPrice($stockSymbol) - $userStock['amount'] * $userStock['avg_price']) / ($buyAmount - $userStock['amount']);
+
+        $queryBuilder = $this->connection->createQueryBuilder();
+        $queryBuilder->update('stocks')
+            ->set('avg_price', '?')
+            ->set('amount', 'amount + ?')
+            ->where('user_id = ?')
+            ->andWhere('symbol = ?')
+            ->setParameter(0, $newAvgPrice)
+            ->setParameter(1, $buyAmount)
+            ->setParameter(2, $user->getId())
+            ->setParameter(3, $stockSymbol)
+            ->executeQuery();
+    }
+
     private function updateUserMoney(string $stockSymbol, int $buyAmount, User $user): void
     {
         $moneyLeft = $user->getMoney() - $buyAmount * $this->getPrice($stockSymbol);
@@ -88,7 +125,7 @@ class BuyStockService
             ->executeQuery();
     }
 
-    private function insertTransaction(string $stockSymbol, int $buyAmount, User $user): void
+    private function insertTransaction(string $type, string $stockSymbol, int $buyAmount, User $user): void
     {
         $queryBuilder = $this->connection->createQueryBuilder();
         $queryBuilder->insert('transactions')
@@ -102,12 +139,23 @@ class BuyStockService
                 'date' => '?',
             ])
             ->setParameter(0, $user->getId())
-            ->setParameter(1, 'BUY')
+            ->setParameter(1, $type)
             ->setParameter(2, $stockSymbol)
             ->setParameter(3, $buyAmount)
             ->setParameter(4, $this->getPrice($stockSymbol))
             ->setParameter(5, $buyAmount * $this->getPrice($stockSymbol))
             ->setParameter(6, date('Y-m-d H:i:s'))
+            ->executeQuery();
+    }
+
+    private function deleteStock(string $stockSymbol, User $user): void
+    {
+        $queryBuilder = $this->connection->createQueryBuilder();
+        $queryBuilder->delete('stocks')
+            ->where('user_id = ?')
+            ->andWhere('symbol = ?')
+            ->setParameter(0, $user->getId())
+            ->setParameter(1, $stockSymbol)
             ->executeQuery();
     }
 }

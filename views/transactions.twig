@@ -30,15 +30,31 @@
                         </td>
                         {% if (transaction.type == 'BUY') %}
                             <td class="py-1 text-sky-600">{{ transaction.type }}</td>
-                        {% else %}
+                        {% elseif (transaction.type == 'SELL') %}
                             <td class="py-1 text-emerald-600">{{ transaction.type }}</td>
+                        {% elseif (transaction.type == 'SEND GIFT') %}
+                            <td class="py-1 text-purple-500">{{ transaction.type }}</td>
+                        {% elseif (transaction.type == 'SHORTLIST') %}
+                            <td class="py-1 text-red-500">{{ transaction.type }}</td>
+                        {% elseif (transaction.type == 'CLOSE SHORTLIST') %}
+                            <td class="py-1 text-green-500">{{ transaction.type }}</td>
+                        {% else %}
+                            <td class="py-1 text-amber-500">{{ transaction.type }}</td>
                         {% endif %}
                         <td class="py-1">{{ transaction.amount }}</td>
                         <td class="py-1">{{ transaction.price|number_format(2) }}</td>
                         {% if (transaction.type == 'BUY') %}
                             <td class="py-1 text-sky-600">{{ transaction.total_sum|number_format(2) }}</td>
-                        {% else %}
+                        {% elseif (transaction.type == 'SELL') %}
                             <td class="py-1 text-emerald-600">{{ transaction.total_sum|number_format(2) }}</td>
+                        {% elseif (transaction.type == 'SEND GIFT') %}
+                            <td class="py-1 text-purple-500">{{ transaction.total_sum|number_format(2) }}</td>
+                        {% elseif (transaction.type == 'SHORTLIST') %}
+                            <td class="py-1 text-red-500">{{ transaction.total_sum|number_format(2) }}</td>
+                        {% elseif (transaction.type == 'CLOSE SHORTLIST') %}
+                            <td class="py-1 text-green-500">{{ transaction.total_sum|number_format(2) }}</td>
+                        {% else %}
+                            <td class="py-1 text-amber-500">{{ transaction.total_sum|number_format(2) }}</td>
                         {% endif %}
                         <td class="py-1">{{ transaction.date }}</td>
                     </tr>

@@ -13,6 +13,7 @@ class StockTransactionValidation
             $_SESSION['errors']['amount'] = 'Amount must be positive';
         }
         $this->validateMoney($stockSymbol, $buyAmount, $user);
+        $this->validateAmountOwnedForBuy($stockSymbol, $buyAmount, $user);
     }
 
     public function sellValidation(string $stockSymbol, int $sellAmount, User $user): void
@@ -20,7 +21,7 @@ class StockTransactionValidation
         if ($sellAmount <= 0) {
             $_SESSION['errors']['amount'] = 'Amount must be positive';
         }
-        $this->validateAmountOwned($stockSymbol, $sellAmount, $user);
+        $this->validateAmountOwnedForSale($stockSymbol, $sellAmount, $user);
     }
 
     public function validationFailed(): bool
@@ -31,16 +32,25 @@ class StockTransactionValidation
     private function validateMoney(string $stockSymbol, int $stockAmount, User $user): void
     {
         if ($user->getMoney() < $stockAmount * $this->getStockPrice($stockSymbol)) {
-            $_SESSION['errors']['money'] = 'Not enough money for the purchase';
+            $_SESSION['errors']['money'] = 'Not enough money for the purchase. Money available: $' . $user->getMoney();
         }
     }
 
-    private function validateAmountOwned(string $stockSymbol, int $stockAmount, User $user): void
+    private function validateAmountOwnedForSale(string $stockSymbol, int $stockAmount, User $user): void
     {
         $userAmountOfStock = $user->getStockBySymbol($stockSymbol)['amount'];
 
         if ($userAmountOfStock > 0 && $userAmountOfStock < $stockAmount) {
-            $_SESSION['errors']['amount'] = 'Not enough stocks for the sale';
+            $_SESSION['errors']['amount'] = 'Not enough stocks for the sale. You own: ' . $userAmountOfStock;
+        }
+    }
+
+    private function validateAmountOwnedForBuy(string $stockSymbol, int $stockAmount, User $user): void
+    {
+        $userAmountOfStock = $user->getStockBySymbol($stockSymbol)['amount'];
+
+        if ($userAmountOfStock < 0 && $userAmountOfStock > -$stockAmount) {
+            $_SESSION['errors']['amount'] = 'Please buy the shortlisted stocks before purchasing more. You have shortlisted: ' . abs($userAmountOfStock) . 'stocks';
         }
     }
 

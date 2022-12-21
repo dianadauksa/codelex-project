@@ -49,7 +49,6 @@
                                     ${{ stock.currentPrice|number_format(2) }}</div>
                                 <div>
                                     <form action="/buy" method="post">
-                                        <input type="hidden" name="price" value="{{ stock.currentPrice }}">
                                         <input type="hidden" name="symbol" value="{{ stock.symbol }}">
                                         <input type="number" name="amount" placeholder="Amount" id="buy-amount">
                                         <input type="submit" value="Buy Stock"
@@ -80,7 +79,6 @@
                                     ${{ stock.currentPrice|number_format(2) }}</div>
                                 <div>
                                     <form action="/sell" method="post">
-                                        <input type="hidden" name="price" value="{{ stock.currentPrice }}">
                                         <input type="hidden" name="symbol" value="{{ stock.symbol }}">
                                         <input type="number" name="amount" placeholder="Amount" id="sell-amount">
                                         <input type="submit" value="Sell Stock"

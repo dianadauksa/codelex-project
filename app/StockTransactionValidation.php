@@ -2,24 +2,25 @@
 
 namespace App;
 
-use App\Services\User\UserManagementService;
+use App\Models\User;
+use App\Services\Stock\ShowAllStocksService;
 
 class StockTransactionValidation
 {
-    public function buyValidation(array $post): void
+    public function buyValidation(string $stockSymbol, int $buyAmount, User $user): void
     {
-        if($post['amount'] <= 0) {
+        if ($buyAmount <= 0) {
             $_SESSION['errors']['amount'] = 'Amount must be positive';
         }
-        $this->validateMoney($post);
+        $this->validateMoney($stockSymbol, $buyAmount, $user);
     }
 
-    public function sellValidation(array $post): void
+    public function sellValidation(string $stockSymbol, int $sellAmount, User $user): void
     {
-        if($post['amount'] <= 0) {
+        if ($sellAmount <= 0) {
             $_SESSION['errors']['amount'] = 'Amount must be positive';
         }
-        $this->validateAmountOwned($post);
+        $this->validateAmountOwned($stockSymbol, $sellAmount, $user);
     }
 
     public function validationFailed(): bool
@@ -27,23 +28,26 @@ class StockTransactionValidation
         return count($_SESSION['errors']) > 0;
     }
 
-    private function validateMoney(array $post): void
+    private function validateMoney(string $stockSymbol, int $stockAmount, User $user): void
     {
-        $service = new UserManagementService();
-        $userData = $service->getUserById($_SESSION['auth_id']);
-
-        if ($userData['money'] < $post['amount'] * $post['price']) {
+        if ($user->getMoney() < $stockAmount * $this->getStockPrice($stockSymbol)) {
             $_SESSION['errors']['money'] = 'Not enough money for the purchase';
         }
     }
 
-    private function validateAmountOwned(array $post): void
+    private function validateAmountOwned(string $stockSymbol, int $stockAmount, User $user): void
     {
-        $service = new UserManagementService();
-        $userAmount = $service->getAmountOwned($_SESSION['auth_id'], $post['symbol']);
+        $userAmountOfStock = $user->getStockBySymbol($stockSymbol)['amount'];
 
-        if ($userAmount < $post['amount'] || $userAmount == null) {
+        if ($userAmountOfStock > 0 && $userAmountOfStock < $stockAmount) {
             $_SESSION['errors']['amount'] = 'Not enough stocks for the sale';
         }
+    }
+
+    private function getStockPrice(string $stockSymbol): float
+    {
+        $service = new ShowAllStocksService();
+        $stock = $service->executeSingle($stockSymbol);
+        return $stock->getCurrentPrice();
     }
 }

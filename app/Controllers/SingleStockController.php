@@ -19,7 +19,6 @@ class SingleStockController
         return new View("singleStock", ["stock" => $stock, "transactions" => $stockTransactions]);
     }
 
-    //TODO: price validation (not to take price from FE)
     //TODO: short listing stock (update buy/sell service + transactionValidation)
 
     public function buy(): Redirect
@@ -30,7 +29,7 @@ class SingleStockController
         $user = new User($userId);
 
         $validation = new StockTransactionValidation();
-        $validation->buyValidation($_POST);
+        $validation->buyValidation($stockSymbol, $stockAmount, $user);
         if ($validation->validationFailed()) {
             return new Redirect('/stock?symbol=' . $stockSymbol);
         }
@@ -48,7 +47,7 @@ class SingleStockController
         $user = new User($userId);
 
         $validation = new StockTransactionValidation();
-        $validation->sellValidation($_POST);
+        $validation->sellValidation($stockSymbol, $stockAmount, $user);
         if ($validation->validationFailed()) {
             return new Redirect('/stock?symbol=' . $stockSymbol);
         }

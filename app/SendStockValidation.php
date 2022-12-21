@@ -2,36 +2,28 @@
 
 namespace App;
 
-use App\Repositories\Users\MySQLUsersRepository;
-use App\Repositories\Users\UsersRepository;
+use App\Models\User;
 
 class SendStockValidation
 {
-    private UsersRepository $usersRepository;
-
-    public function __construct()
-    {
-        $this->usersRepository = new MySQLUsersRepository();
-    }
-
     public function validationFailed(): bool
     {
         return count($_SESSION['errors']) > 0;
     }
 
-    public function validate(array $post): void
+    public function validate(User $user, int $stockAmount, string $stockSymbol): void
     {
-        if ($post['amount'] <= 0) {
+        if ($stockAmount <= 0) {
             $_SESSION['errors']['amount'] = 'Amount must be positive';
         }
-        $this->validateAmountOwned($post);
+        $this->validateAmountOwned($user, $stockAmount, $stockSymbol);
     }
 
-    private function validateAmountOwned(array $post): void
+    private function validateAmountOwned(User $user, int $stockAmount, string $stockSymbol): void
     {
-        $userAmount = $this->usersRepository->getAmountOwned($_SESSION['auth_id'], $post['symbol']);
+        $userAmount = $user->getStockBySymbol($stockSymbol)['amount'];
 
-        if ($userAmount < $post['amount'] || $userAmount == null) {
+        if ($userAmount < $stockAmount || $userAmount == null) {
             $_SESSION['errors']['amount'] = 'Not enough stocks for the gift';
         }
     }

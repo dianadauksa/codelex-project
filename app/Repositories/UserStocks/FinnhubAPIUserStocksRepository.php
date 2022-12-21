@@ -2,8 +2,7 @@
 
 namespace App\Repositories\UserStocks;
 
-use App\Services\User\UserManagementService;
-use App\Models\{UserStock, Collections\UserStocksCollection};
+use App\Models\{User, UserStock, Collections\UserStocksCollection};
 use GuzzleHttp\Client;
 
 class FinnhubAPIUserStocksRepository implements UserStocksRepository
@@ -17,6 +16,7 @@ class FinnhubAPIUserStocksRepository implements UserStocksRepository
         $endPoint = "/quote?symbol=";
 
         $client = new Client();
+        $user = new User($_SESSION['auth_id']);
         $userStocks = new UserStocksCollection();
 
         foreach ($stockSymbols as $symbol) {
@@ -25,10 +25,9 @@ class FinnhubAPIUserStocksRepository implements UserStocksRepository
             $quoteResponse = $client->request('GET', $quoteUrl);
             $quoteData = json_decode($quoteResponse->getBody()->getContents());
 
-            $service = new UserManagementService();
-            $userStockData = $service->getUserStock($_SESSION['auth_id'], $symbol);
-            $amountOwned = $userStockData['amount'];
-            $avgPrice = $userStockData['avg_price'];
+            $userStock = $user->getStockBySymbol($symbol);
+            $amountOwned = $userStock['amount'];
+            $avgPrice = $userStock['avg_price'];
 
             $userStocks->add(new UserStock(
                 $symbol,

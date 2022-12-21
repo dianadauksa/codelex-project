@@ -19,8 +19,6 @@ class SingleStockController
         return new View("singleStock", ["stock" => $stock, "transactions" => $stockTransactions]);
     }
 
-    //TODO: short listing stock (update buy/sell service + transactionValidation)
-
     public function buy(): Redirect
     {
         $stockSymbol = $_POST['symbol'];

@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\{Redirect, SendStockValidation, View};
+use App\{Models\User, Redirect, SendStockValidation, View};
 use App\Services\Friends\{ShowFriendsService, SendStockService};
 
 class FriendsController
@@ -23,8 +23,12 @@ class FriendsController
 
     public function sendStock(): Redirect
     {
+        $user = new User($_SESSION['auth_id']);
+        $stockAmount = $_POST['amount'];
+        $stockSymbol = $_POST['symbol'];
+
         $validation = new SendStockValidation();
-        $validation->validate($_POST);
+        $validation->validate($user, $stockAmount, $stockSymbol);
         if ($validation->validationFailed()) {
             return new Redirect('/friend?id=' . $_POST['friend_id']);
         }

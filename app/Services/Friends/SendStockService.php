@@ -3,18 +3,15 @@
 namespace App\Services\Friends;
 
 use App\Database;
-use App\Repositories\Users\MySQLUsersRepository;
-use App\Repositories\Users\UsersRepository;
+use App\Models\User;
 use Doctrine\DBAL\Connection;
 
 class SendStockService
 {
-    private UsersRepository $usersRepository;
     private Connection $connection;
 
     public function __construct()
     {
-        $this->usersRepository = new MySQLUsersRepository();
         $this->connection = Database::getConnection();
     }
 
@@ -32,9 +29,11 @@ class SendStockService
     {
         $queryBuilder = $this->connection->createQueryBuilder();
 
-        $userStock = $this->usersRepository->getUserStock($_SESSION['auth_id'], strtoupper($post['symbol']));
-        $friendStock = $this->usersRepository->getUserStock($post['friend_id'], strtoupper($post['symbol']));
-        $friendAmountOfStock = $friendStock['amount'];
+        $user = new User($_SESSION['auth_id']);
+        $userStock = $user->getStockBySymbol(strtoupper($post['symbol']));
+        $friend = new User($post['friend_id']);
+        $friendAmountOfStock = $friend->getStockBySymbol(strtoupper($post['symbol']))['amount'];
+
         if ($friendAmountOfStock == null) {
             $queryBuilder->insert('stocks')
                 ->values([
@@ -62,8 +61,10 @@ class SendStockService
 
     private function updateUserStocks(array $post): void
     {
-        $userStock = $this->usersRepository->getUserStock($_SESSION['auth_id'], strtoupper($post['symbol']));
+        $user = new User($_SESSION['auth_id']);
+        $userStock = $user->getStockBySymbol(strtoupper($post['symbol']));
         $newAmount = $userStock['amount'] - $post['amount'];
+
         $queryBuilder = $this->connection->createQueryBuilder();
         $queryBuilder->update('stocks')
             ->set('amount', '?')

@@ -29,14 +29,4 @@ class UserManagementService
     {
         return $this->usersRepository->getByID($id);
     }
-
-    public function getAmountOwned(int $id, string $symbol): ?int
-    {
-        return $this->usersRepository->getAmountOwned($id, $symbol);
-    }
-
-    public function getUserStock(int $id, string $symbol): ?array
-    {
-        return $this->usersRepository->getUserStock($id, $symbol);
-    }
 }

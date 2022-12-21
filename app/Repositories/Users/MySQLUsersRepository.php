@@ -53,32 +53,6 @@ class MySQLUsersRepository implements UsersRepository
         return $user ?: null;
     }
 
-    public function getAmountOwned(int $id, string $symbol): ?int
-    {
-        $amountOwned = $this->queryBuilder
-            ->select('amount')
-            ->from('stocks')
-            ->where('user_id = ?')
-            ->andWhere('symbol = ?')
-            ->setParameter(0, $id)
-            ->setParameter(1, $symbol)
-            ->fetchOne();
-        return $amountOwned ?: null;
-    }
-
-    public function getUserStock(int $id, string $symbol): ?array
-    {
-        $stock = $this->queryBuilder
-            ->select('*')
-            ->from('stocks')
-            ->where('user_id = ?')
-            ->andWhere('symbol = ?')
-            ->setParameter(0, $id)
-            ->setParameter(1, $symbol)
-            ->fetchAssociative();
-        return $stock ?: null;
-    }
-
     public function getAllUsers(): ?array
     {
         $users = $this->queryBuilder

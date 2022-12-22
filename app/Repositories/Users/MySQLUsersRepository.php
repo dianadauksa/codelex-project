@@ -4,22 +4,14 @@ namespace App\Repositories\Users;
 
 use App\Database;
 use App\Services\User\RegisterUserServiceRequest;
-use Doctrine\DBAL\{Connection, Query\QueryBuilder};
 
 class MySQLUsersRepository implements UsersRepository
 {
-    private Connection $connection;
-    private QueryBuilder $queryBuilder;
-
-    public function __construct()
-    {
-        $this->connection = Database::getConnection();
-        $this->queryBuilder = $this->connection->createQueryBuilder();
-    }
-
     public function add(RegisterUserServiceRequest $request): void
     {
-        $this->queryBuilder->insert('users')
+        $connection = Database::getConnection();
+        $queryBuilder = $connection->createQueryBuilder();
+        $queryBuilder->insert('users')
             ->values([
                 'name' => '?',
                 'email' => '?',
@@ -33,7 +25,9 @@ class MySQLUsersRepository implements UsersRepository
 
     public function getByEmail(string $email): ?array
     {
-        $user = $this->queryBuilder
+        $connection = Database::getConnection();
+        $queryBuilder = $connection->createQueryBuilder();
+        $user = $queryBuilder
             ->select('*')
             ->from('users')
             ->where('email = ?')
@@ -44,7 +38,9 @@ class MySQLUsersRepository implements UsersRepository
 
     public function getByID(int $id): ?array
     {
-        $user = $this->queryBuilder
+        $connection = Database::getConnection();
+        $queryBuilder = $connection->createQueryBuilder();
+        $user = $queryBuilder
             ->select('*')
             ->from('users')
             ->where('id = ?')
@@ -55,7 +51,9 @@ class MySQLUsersRepository implements UsersRepository
 
     public function getAllUsers(): ?array
     {
-        $users = $this->queryBuilder
+        $connection = Database::getConnection();
+        $queryBuilder = $connection->createQueryBuilder();
+        $users = $queryBuilder
             ->select('*')
             ->from('users')
             ->fetchAllAssociative();

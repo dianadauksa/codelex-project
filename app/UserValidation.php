@@ -16,7 +16,7 @@ class UserValidation
     public function loginValidate(array $post): void
     {
         $service = new UserManagementService();
-        $userData = $service->getUserByEmail($_POST['email']);
+        $userData = $service->getUserByEmail($post['email']);
 
         if (!$userData) {
             $_SESSION['errors']['email'] = 'Invalid login email or password';

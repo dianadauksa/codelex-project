@@ -10,7 +10,7 @@ class User
     private string $id;
     private string $name;
     private float $money;
-    private array $stocks;
+    private array $stocks = [];
     private array $transactions;
     private Connection $connection;
 

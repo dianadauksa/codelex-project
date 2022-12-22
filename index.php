@@ -44,7 +44,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $rou
     $route->addRoute('GET', '/transactions', ['App\Controllers\TransactionController', 'index']);
     $route->addRoute('GET', '/transactions-for', ['App\Controllers\TransactionController', 'showTransactionsForStock']);
     $route->addRoute('GET', '/friends', ['App\Controllers\FriendsController', 'index']);
-    $route->addRoute('GET', '/friend/{id}', ['App\Controllers\FriendsController', 'singleFriend']);
+    $route->addRoute('GET', '/friend', ['App\Controllers\FriendsController', 'singleFriend']);
     $route->addRoute('POST', '/send', ['App\Controllers\FriendsController', 'sendStock']);
     $route->addRoute('GET', '/register', ['App\Controllers\RegisterController', 'index']);
     $route->addRoute('POST', '/register', ['App\Controllers\RegisterController', 'register']);
@@ -78,7 +78,7 @@ switch ($routeInfo[0]) {
         $container = new Container();
         $container->set(UserStocksRepository::class, DI\create(FinnhubAPIUserStocksRepository::class));
 
-        $response = $container->get($controller)->{$method}($vars);
+        $response = $container->get($controller)->{$method}();
         if ($response instanceof View) {
             echo $twig->render($response->getTemplatePath() . '.twig', $response->getProperties());
             unset($_SESSION['errors']);

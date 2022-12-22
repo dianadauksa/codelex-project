@@ -4,62 +4,50 @@
         <div class="p-4 w-full">
             {% if errors %}
                 {% for error in errors %}
-                    <p class="font-semibold text-red-600 capitalize lg:text-1xl ml-3">
+                    <p class="text-center font-semibold text-red-600 capitalize lg:text-1xl ml-3">
                         X {{ error }}
                     </p>
                 {% endfor %}
             {% endif %}
             {% if success %}
                 {% for each in success %}
-                    <p class="font-semibold text-green-600 capitalize lg:text-1xl ml-3">
+                    <p class="text-center font-semibold text-green-600 capitalize lg:text-1xl ml-3">
                         ✓ {{ each }}
                     </p>
                 {% endfor %}
             {% endif %}
-            <div class="grid grid-cols-12 gap-4">
-
-                    <div class="col-span-12 sm:col-span-6 md:col-span-3">
-                        <div class="flex flex-row bg-white shadow-sm rounded p-4">
-                            <div class="flex flex-col flex-grow ml-4">
-                                <div class="text-sm text-gray-500">
-                                    <div class="col-span-12 lg:col-span-8">
-                                        <a href="/?symbol={{ stock.symbol }}"
-                                           class="inline-block rounded-full text-white bg-black text-xs font-bold mr-1 md:mr-2 mb-2 px-2 md:px-4 py-1 ">
-                                            {{ stock.symbol }}
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="font-bold text-lg">${{ stock.currentPrice|number_format(2) }}</div>
+            <div class="flex items-center justify-center">
+                <div class="grid grid-cols-3 gap-4 items-center">
+                    <div class="col-span-1">
+                        <div class="flex flex-col items-center justify-center bg-white shadow-sm rounded p-4 max-w-xs h-32 border border-gray-300">
+                            <!-- first card items-->
+                            <a href="/?symbol={{ stock.symbol }}"
+                               class="inline-block rounded-full text-white bg-black text-xl font-bold py-2 px-4">
+                                {{ stock.symbol }}
+                            </a>
+                            <div class="flex items-center justify-between mt-4">
+                                <div class="font-bold text-lg mx-2">${{ stock.currentPrice|number_format(2) }}</div>
                                 {% if (stock.change > 0) %}
-                                    <span class="text-emerald-600">▲{{ stock.change|number_format(2) }}%</span>
+                                    <span class="text-emerald-600 mx-2">▲{{ stock.change|number_format(2) }}%</span>
                                 {% else %}
-                                    <span class="text-red-600">▼{{ stock.change|number_format(2) }}%</span>
+                                    <span class="text-red-600 mx-2">▼{{ stock.change|number_format(2) }}%</span>
                                 {% endif %}
                             </div>
                         </div>
                     </div>
-
-                    <div class="col-span-12 sm:col-span-6 md:col-span-3">
-                        <div class="flex flex-row bg-white shadow-sm rounded p-4">
-                            <div class="flex flex-col flex-grow ml-4">
-                                <div class="text-sm text-gray-500">
-                                    <div class="col-span-12 lg:col-span-8"></div>
-                                </div>
-                                <div class="font-bold text-lg">Current price:
-                                    ${{ stock.currentPrice|number_format(2) }}</div>
-                                <div>
-                                    <form action="/buy" method="post">
-                                        <input type="hidden" name="symbol" value="{{ stock.symbol }}">
-                                        <input type="number" name="amount" placeholder="Amount" id="buy-amount">
-                                        <input type="submit" value="Buy Stock"
-                                               class="inline-block rounded-full text-white bg-sky-600 text-xs font-bold mr-1 md:mr-2 mb-2 px-2 md:px-4 py-1">
-                                    </form>
-                                    <div id="total-price">Total price: $0.00</div>
-                                </div>
-                            </div>
+                    <div class="col-span-1">
+                        <div class="flex flex-col items-center justify-center bg-white shadow-sm rounded p-4 max-w-xs h-32 border border-gray-300">
+                            <!-- second card items-->
+                            <div id="total-price" class="font-bold text-lg my-2">Total price: $0.00</div>
+                            <form action="/buy" method="post" class="flex flex-row items-center">
+                                <input type="hidden" name="symbol" value="{{ stock.symbol }}">
+                                <input type="number" name="amount" placeholder="Amount" id="buy-amount"
+                                       class="rounded-md border-2 border-gray-400 py-2 px-4 block w-2/3 my-2 mr-2">
+                                <input type="submit" value="Buy"
+                                       class="text-center rounded-full text-white bg-gradient-to-r from-blue-800 to-sky-300 hover:shadow-lg text-sm font-bold py-2 px-4 ml-2">
+                            </form>
                         </div>
                     </div>
-
                     <script>
                         let amountInput = document.getElementById('buy-amount');
                         let totalPrice = document.getElementById('total-price');
@@ -69,24 +57,17 @@
                         });
                     </script>
 
-                    <div class="col-span-12 sm:col-span-6 md:col-span-3">
-                        <div class="flex flex-row bg-white shadow-sm rounded p-4">
-                            <div class="flex flex-col flex-grow ml-4">
-                                <div class="text-sm text-gray-500">
-                                    <div class="col-span-12 lg:col-span-8"></div>
-                                </div>
-                                <div class="font-bold text-lg">Current price:
-                                    ${{ stock.currentPrice|number_format(2) }}</div>
-                                <div>
-                                    <form action="/sell" method="post">
-                                        <input type="hidden" name="symbol" value="{{ stock.symbol }}">
-                                        <input type="number" name="amount" placeholder="Amount" id="sell-amount">
-                                        <input type="submit" value="Sell Stock"
-                                               class="inline-block rounded-full text-white bg-emerald-600 text-xs font-bold mr-1 md:mr-2 mb-2 px-2 md:px-4 py-1">
-                                    </form>
-                                    <div id="total-sale">Total price: $0.00</div>
-                                </div>
-                            </div>
+                    <div class="col-span-1">
+                        <div class="flex flex-col items-center justify-center bg-white shadow-sm rounded p-4 max-w-xs h-32 border border-gray-300">
+                            <!-- third card items-->
+                            <div id="total-sale" class="font-bold text-lg my-2">Total earnings: $0.00</div>
+                            <form action="/sell" method="post" class="flex flex-row items-center">
+                                <input type="hidden" name="symbol" value="{{ stock.symbol }}">
+                                <input type="number" name="amount" placeholder="Amount" id="sell-amount"
+                                       class="rounded-md border-2 border-gray-400 py-2 px-4 block w-2/3 my-2 mr-2">
+                                <input type="submit" value="Sell"
+                                       class="text-center rounded-full text-white bg-gradient-to-r from-emerald-800 to-lime-500 hover:shadow-lg text-sm font-bold py-2 px-4 ml-2">
+                            </form>
                         </div>
                     </div>
                     <script>
@@ -97,11 +78,13 @@
                             totalSale.innerHTML = 'Total earnings: $' + totalSaleAmount.toFixed(2);
                         });
                     </script>
+                </div>
             </div>
+
 
             {% if transactions %}
             <div class="flex justify-center p-4">
-                <h1 class="text-center text-lg font-bold text-2xl">Your Transaction History With {{ stock.symbol }}</h1>
+                <h1 class="text-center text-lg font-bold text-2xl">Transaction History With {{ stock.symbol }}</h1>
             </div>
             <div class="flex justify-center text-center mx-auto">
                 <table class="w-4/5 mt-3">

@@ -63,21 +63,32 @@ class SendStockService
     {
         $user = new User($_SESSION['auth_id']);
         $userStock = $user->getStockBySymbol(strtoupper($post['symbol']));
-        $newAmount = $userStock['amount'] - $post['amount'];
-
+        $userAmountOfStock = $userStock['amount'];
+        $newAmount = $userAmountOfStock - $post['amount'];
         $queryBuilder = $this->connection->createQueryBuilder();
-        $queryBuilder->update('stocks')
-            ->set('amount', '?')
-            ->where('user_id = ?')
-            ->andWhere('symbol = ?')
-            ->setParameter(0, $newAmount)
-            ->setParameter(1, $_SESSION['auth_id'])
-            ->setParameter(2, strtoupper($post['symbol']))
-            ->executeQuery();
+
+        if ($userAmountOfStock == $post['amount']) {
+            $queryBuilder->delete('stocks')
+                ->where('user_id = ?')
+                ->andWhere('symbol = ?')
+                ->setParameter(0, $_SESSION['auth_id'])
+                ->setParameter(1, strtoupper($post['symbol']))
+                ->executeQuery();
+        } else {
+            $queryBuilder->update('stocks')
+                ->set('amount', '?')
+                ->where('user_id = ?')
+                ->andWhere('symbol = ?')
+                ->setParameter(0, $newAmount)
+                ->setParameter(1, $_SESSION['auth_id'])
+                ->setParameter(2, strtoupper($post['symbol']))
+                ->executeQuery();
+        }
     }
 
     private function insertFriendTransaction(array $post): void
     {
+        $userName = (new User($_SESSION['auth_id']))->getName();
         $queryBuilder = $this->connection->createQueryBuilder();
         $queryBuilder->insert('transactions')
             ->values([
@@ -90,7 +101,7 @@ class SendStockService
                 'date' => '?',
             ])
             ->setParameter(0, $post['friend_id'])
-            ->setParameter(1, 'RECEIVED GIFT')
+            ->setParameter(1, "RECEIVE GIFT FROM $userName")
             ->setParameter(2, strtoupper($post['symbol']))
             ->setParameter(3, $post['amount'])
             ->setParameter(4, 0.00)
@@ -101,8 +112,8 @@ class SendStockService
 
     private function insertUserTransaction(array $post): void
     {
-        $connection = Database::getConnection();
-        $queryBuilder = $connection->createQueryBuilder();
+        $friendName = (new User($post['friend_id']))->getName();
+        $queryBuilder = $this->connection->createQueryBuilder();
         $queryBuilder->insert('transactions')
             ->values([
                 'user_id' => '?',
@@ -114,7 +125,7 @@ class SendStockService
                 'date' => '?',
             ])
             ->setParameter(0, $_SESSION['auth_id'])
-            ->setParameter(1, 'SEND GIFT')
+            ->setParameter(1, "SEND GIFT TO $friendName")
             ->setParameter(2, strtoupper($post['symbol']))
             ->setParameter(3, $post['amount'])
             ->setParameter(4, 0.00)

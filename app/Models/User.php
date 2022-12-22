@@ -10,7 +10,7 @@ class User
     private string $id;
     private string $name;
     private float $money;
-    private array $stocks = [];
+    private array $stocks;
     private array $transactions;
     private Connection $connection;
 
@@ -18,11 +18,11 @@ class User
     {
         $this->connection = Database::getConnection();
         $this->id = $id;
-        $userData = $this->setUserData();
+        $userData = $this->setUserData() ?? [];
         $this->name = $userData['name'];
         $this->money = $userData['money'];
-        $this->stocks = $this->setUserStocks();
-        $this->transactions = $this->setUserTransactions();
+        $this->stocks = $this->setUserStocks() ?? [];
+        $this->transactions = $this->setUserTransactions() ?? [];
     }
 
     public function getId(): string

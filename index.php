@@ -2,10 +2,11 @@
 
 use DI\Container;
 use App\{Redirect,
+    Repositories\Stocks\FinnhubAPIStocksRepository,
+    Repositories\Stocks\StocksRepository,
     Repositories\UserStocks\FinnhubAPIUserStocksRepository,
     Repositories\UserStocks\UserStocksRepository,
-    View
-};
+    View};
 use App\ViewVariables\{AuthViewVariables,
     ErrorViewVariables,
     MyStocksViewVariables,
@@ -77,6 +78,7 @@ switch ($routeInfo[0]) {
 
         $container = new Container();
         $container->set(UserStocksRepository::class, DI\create(FinnhubAPIUserStocksRepository::class));
+        $container->set(StocksRepository::class, DI\create(FinnhubAPIStocksRepository::class));
 
         $response = $container->get($controller)->{$method}();
         if ($response instanceof View) {

@@ -5,15 +5,14 @@ namespace App\Services\UserStock;
 use App\Database;
 use App\Models\User;
 use App\Services\Stock\ShowAllStocksService;
-use Doctrine\DBAL\Connection;
 
 class BuyStockService
 {
-    private Connection $connection;
+    private ShowAllStocksService $service;
 
-    public function __construct()
+    public function __construct(ShowAllStocksService $service)
     {
-        $this->connection = Database::getConnection();
+        $this->service = $service;
     }
 
     public function execute(string $stockSymbol, int $buyAmount, User $user): void
@@ -26,28 +25,28 @@ class BuyStockService
 
             $total = $buyAmount * $this->getPrice($stockSymbol);
             $_SESSION['success']['purchase'] =
-                "Successfully bought $buyAmount shares of $stockSymbol for $ {$total}";
+                "Successfully bought $buyAmount shares of $stockSymbol for $ $total";
         } elseif ($userAmountOfStock > 0) {
             $this->updateExistingStock($stockSymbol, $buyAmount, $user);
             $this->insertTransaction('BUY', $stockSymbol, $buyAmount, $user);
 
             $total = $buyAmount * $this->getPrice($stockSymbol);
             $_SESSION['success']['purchase'] =
-                "Successfully bought $buyAmount shares of $stockSymbol for $ {$total}";
+                "Successfully bought $buyAmount shares of $stockSymbol for $ $total";
         } elseif ($userAmountOfStock == -$buyAmount) {
             $this->deleteStock($stockSymbol, $user);
             $this->insertTransaction('CLOSE SHORTLIST', $stockSymbol, $buyAmount, $user);
 
             $total = $buyAmount * $this->getPrice($stockSymbol);
             $_SESSION['success']['purchase'] =
-                "Successfully closed shortlisted $buyAmount shares of $stockSymbol for $ {$total}";
+                "Successfully closed shortlisted $buyAmount shares of $stockSymbol for $ $total";
         } elseif ($userAmountOfStock < 0) {
             $this->updateShortlist($stockSymbol, $buyAmount, $user);
             $this->insertTransaction('DECREASE SHORTLIST', $stockSymbol, $buyAmount, $user);
 
             $total = $buyAmount * $this->getPrice($stockSymbol);
             $_SESSION['success']['purchase'] =
-                "Updated shortlist: $buyAmount additional shares of $stockSymbol for $ {$total}";
+                "Updated shortlist: $buyAmount additional shares of $stockSymbol for $ $total";
         }
 
         $this->updateUserMoney($stockSymbol, $buyAmount, $user);
@@ -55,14 +54,14 @@ class BuyStockService
 
     private function getPrice(string $stockSymbol): float
     {
-        $service = new ShowAllStocksService();
-        $stock = $service->executeSingle($stockSymbol);
+        $stock = $this->service->executeSingle($stockSymbol);
         return $stock->getCurrentPrice();
     }
 
     private function insertNewStock(string $stockSymbol, int $buyAmount, User $user): void
     {
-        $queryBuilder = $this->connection->createQueryBuilder();
+        $connection = Database::getConnection();
+        $queryBuilder = $connection->createQueryBuilder();
         $queryBuilder->insert('stocks')
             ->values([
                 'user_id' => '?',
@@ -82,7 +81,8 @@ class BuyStockService
         $userStock = $user->getStockBySymbol($stockSymbol);
         $newAvgPrice = ($userStock['amount'] * $userStock['avg_price'] + $buyAmount * $this->getPrice($stockSymbol)) / ($buyAmount + $userStock['amount']);
 
-        $queryBuilder = $this->connection->createQueryBuilder();
+        $connection = Database::getConnection();
+        $queryBuilder = $connection->createQueryBuilder();
         $queryBuilder->update('stocks')
             ->set('avg_price', '?')
             ->set('amount', 'amount + ?')
@@ -100,7 +100,8 @@ class BuyStockService
         $userStock = $user->getStockBySymbol($stockSymbol);
         $newAvgPrice = ($buyAmount * $this->getPrice($stockSymbol) - $userStock['amount'] * $userStock['avg_price']) / ($buyAmount - $userStock['amount']);
 
-        $queryBuilder = $this->connection->createQueryBuilder();
+        $connection = Database::getConnection();
+        $queryBuilder = $connection->createQueryBuilder();
         $queryBuilder->update('stocks')
             ->set('avg_price', '?')
             ->set('amount', 'amount + ?')
@@ -116,7 +117,8 @@ class BuyStockService
     private function updateUserMoney(string $stockSymbol, int $buyAmount, User $user): void
     {
         $moneyLeft = $user->getMoney() - $buyAmount * $this->getPrice($stockSymbol);
-        $queryBuilder = $this->connection->createQueryBuilder();
+        $connection = Database::getConnection();
+        $queryBuilder = $connection->createQueryBuilder();
         $queryBuilder->update('users')
             ->set('money', '?')
             ->where('id = ?')
@@ -127,7 +129,8 @@ class BuyStockService
 
     private function insertTransaction(string $type, string $stockSymbol, int $buyAmount, User $user): void
     {
-        $queryBuilder = $this->connection->createQueryBuilder();
+        $connection = Database::getConnection();
+        $queryBuilder = $connection->createQueryBuilder();
         $queryBuilder->insert('transactions')
             ->values([
                 'user_id' => '?',
@@ -150,7 +153,8 @@ class BuyStockService
 
     private function deleteStock(string $stockSymbol, User $user): void
     {
-        $queryBuilder = $this->connection->createQueryBuilder();
+        $connection = Database::getConnection();
+        $queryBuilder = $connection->createQueryBuilder();
         $queryBuilder->delete('stocks')
             ->where('user_id = ?')
             ->andWhere('symbol = ?')

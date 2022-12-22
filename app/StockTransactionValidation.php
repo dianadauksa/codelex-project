@@ -7,6 +7,13 @@ use App\Services\Stock\ShowAllStocksService;
 
 class StockTransactionValidation
 {
+    private ShowAllStocksService $service;
+
+    public function __construct(ShowAllStocksService $service)
+    {
+        $this->service = $service;
+    }
+
     public function buyValidation(string $stockSymbol, int $buyAmount, User $user): void
     {
         if ($buyAmount <= 0) {
@@ -56,8 +63,8 @@ class StockTransactionValidation
 
     private function getStockPrice(string $stockSymbol): float
     {
-        $service = new ShowAllStocksService();
-        $stock = $service->executeSingle($stockSymbol);
+        //$service = new ShowAllStocksService(); updated to use DI
+        $stock = $this->service->executeSingle($stockSymbol);
         return $stock->getCurrentPrice();
     }
 }

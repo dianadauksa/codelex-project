@@ -5,15 +5,14 @@ namespace App\Services\UserStock;
 use App\Database;
 use App\Models\User;
 use App\Services\Stock\ShowAllStocksService;
-use Doctrine\DBAL\Connection;
 
 class SellStockService
 {
-    private Connection $connection;
+    private ShowAllStocksService $service;
 
-    public function __construct()
+    public function __construct(ShowAllStocksService $service)
     {
-        $this->connection = Database::getConnection();
+        $this->service = $service;
     }
 
     public function execute(string $stockSymbol, int $sellAmount, User $user): void
@@ -51,14 +50,14 @@ class SellStockService
 
     private function getPrice(string $stockSymbol): float
     {
-        $service = new ShowAllStocksService();
-        $stock = $service->executeSingle($stockSymbol);
+        $stock = $this->service->executeSingle($stockSymbol);
         return $stock->getCurrentPrice();
     }
 
     private function deleteStock(string $stockSymbol, User $user): void
     {
-        $queryBuilder = $this->connection->createQueryBuilder();
+        $connection = Database::getConnection();
+        $queryBuilder = $connection->createQueryBuilder();
         $queryBuilder->delete('stocks')
             ->where('user_id = ?')
             ->andWhere('symbol = ?')
@@ -69,7 +68,8 @@ class SellStockService
 
     private function updateExistingStock(string $stockSymbol, int $sellAmount, User $user): void
     {
-        $queryBuilder = $this->connection->createQueryBuilder();
+        $connection = Database::getConnection();
+        $queryBuilder = $connection->createQueryBuilder();
         $queryBuilder->update('stocks')
             ->set('amount', 'amount - ?')
             ->where('user_id = ?')
@@ -85,7 +85,8 @@ class SellStockService
         $userStock = $user->getStockBySymbol($stockSymbol);
         $newAvgPrice = ($sellAmount * $this->getPrice($stockSymbol) - $userStock['amount'] * $userStock['avg_price']) / ($sellAmount - $userStock['amount']);
 
-        $queryBuilder = $this->connection->createQueryBuilder();
+        $connection = Database::getConnection();
+        $queryBuilder = $connection->createQueryBuilder();
         $queryBuilder->update('stocks')
             ->set('avg_price', '?')
             ->set('amount', 'amount - ?')
@@ -101,7 +102,9 @@ class SellStockService
     private function updateUserMoney(string $stockSymbol, int $sellAmount, User $user): void
     {
         $moneyLeft = $user->getMoney() + $sellAmount * $this->getPrice($stockSymbol);
-        $queryBuilder = $this->connection->createQueryBuilder();
+
+        $connection = Database::getConnection();
+        $queryBuilder = $connection->createQueryBuilder();
         $queryBuilder->update('users')
             ->set('money', '?')
             ->where('id = ?')
@@ -112,7 +115,8 @@ class SellStockService
 
     private function insertTransaction(string $type, string $stockSymbol, int $sellAmount, User $user): void
     {
-        $queryBuilder = $this->connection->createQueryBuilder();
+        $connection = Database::getConnection();
+        $queryBuilder = $connection->createQueryBuilder();
         $queryBuilder->insert('transactions')
             ->values([
                 'user_id' => '?',
@@ -135,7 +139,8 @@ class SellStockService
 
     private function insertStock(string $stockSymbol, int $sellAmount, User $user): void
     {
-        $queryBuilder = $this->connection->createQueryBuilder();
+        $connection = Database::getConnection();
+        $queryBuilder = $connection->createQueryBuilder();
         $queryBuilder->insert('stocks')
             ->values([
                 'user_id' => '?',

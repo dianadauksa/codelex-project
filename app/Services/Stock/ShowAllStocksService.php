@@ -3,14 +3,14 @@
 namespace App\Services\Stock;
 
 use App\Models\{Stock, Collections\StocksCollection};
-use App\Repositories\Stocks\{FinnhubAPIStocksRepository, StocksRepository};
+use App\Repositories\Stocks\StocksRepository;
 
 class ShowAllStocksService
 {
     private StocksRepository $stocksRepository;
-    public function __construct()
+    public function __construct(StocksRepository $repository)
     {
-        $this->stocksRepository = new FinnhubAPIStocksRepository();
+        $this->stocksRepository = $repository;
     }
 
     public function execute(array $stockSymbols): StocksCollection

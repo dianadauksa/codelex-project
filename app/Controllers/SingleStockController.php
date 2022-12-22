@@ -33,8 +33,12 @@ class SingleStockController
 
         $user = new User($_SESSION['auth_id']);
         $stockTransactions = $user->getTransactionsBySymbol($stockSymbol);
+        $stockAmount = $user->getStockBySymbol($stockSymbol)['amount'];
 
-        return new View("singleStock", ["stock" => $stock, "transactions" => $stockTransactions]);
+        return new View("singleStock", [
+            "stock" => $stock,
+            "transactions" => $stockTransactions,
+            "stockAmount" => $stockAmount]);
     }
 
     public function buy(): Redirect

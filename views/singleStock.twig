@@ -25,7 +25,12 @@
                                class="inline-block rounded-full text-white bg-black text-xl font-bold py-2 px-4">
                                 {{ stock.symbol }}
                             </a>
-                            <div class="flex items-center justify-between mt-4">
+                            {% if (stockAmount > 0) %}
+                                <p class="text-emerald-600 mt-1">In portfolio {{ stockAmount }} stocks</p>
+                            {% elseif (stockAmount<0) %}
+                                <p class="text-sky-600 mt-1">Shortlisted {{ -(stockAmount) }} stocks</p>
+                            {% endif %}
+                            <div class="flex items-center justify-between mt-2">
                                 <div class="font-bold text-lg mx-2">${{ stock.currentPrice|number_format(2) }}</div>
                                 {% if (stock.change > 0) %}
                                     <span class="text-emerald-600 mx-2">▲{{ stock.change|number_format(2) }}%</span>

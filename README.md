@@ -4,11 +4,11 @@
 
 #### Stock Stars is a stock trading website built on PHP code base. Website includes the following features:
 
-* Create a user account and login to your personal account;
-* Search for a stock and view stock prices and price changes;
-* Buy, sell and shortlist stocks (*currently only with 'dummy' money not real funds*);
-* View your personal stock portfolio, profit/loss of the portfolio, and transaction history;
-* Send stocks to a friend (other **Stock Stars** registered user);
+* Create a user account and login to your personal account
+* Search for a stock and view stock prices and price changes
+* Buy, sell and shortlist stocks (*currently only with 'dummy' money not real funds*)
+* View your personal stock portfolio, profit/loss of the portfolio, and transaction history
+* Send stocks to a friend (other **Stock Stars** registered user)
 * *All the forms used on the website include necessary validations*
 
 ## Technologies Used

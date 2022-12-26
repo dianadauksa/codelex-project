@@ -18,17 +18,6 @@
 * Composer 2.4
 * Tailwind CSS 3.2
 
-#### PHP Packages, Dependencies, Extensions Used
-
-* nikic/fast-route
-* vlucas/phpdotenv
-* twig/twig
-* guzzlehttp/guzzle
-* doctrine/dbal
-* ext-curl
-* ext-json
-* php-di/php-di
-
 ## Setup
 
 #### To setup and use the Stock Stars website, follow these steps:

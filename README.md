@@ -14,6 +14,7 @@
 ## Technologies Used
 
 * PHP 7.4
+* Twig 3.4
 * MySQL 8.0
 * Composer 2.4
 * Tailwind CSS 3.2

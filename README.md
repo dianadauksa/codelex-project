@@ -50,7 +50,7 @@
 Enter the MySQL password at the prompt and press Enter. This will connect you to the MySQL server.
 2. Create the database with command: `CREATE DATABASE <database_name>`.
 Replace `<database_name>` with the name of the database that you want to create.
-3. Import the database structure from the stocks_structure.sql script file with command: `mysql -u <username> -p <database_name> < stocks_structure.sql`.
+3. Import the database structure from the [stocks structure script file](stocks_structure.sql) with command: `mysql -u <username> -p <database_name> < stocks_structure.sql`.
 Replace `<username>` and `<database_name>` with the MySQL username and the name of the database, respectively.
 This will execute the SQL statements in the input file, which will create the tables and other objects in the database needed for the project to run.
 4. Populate the database with data (optional). This can be done manually or simply by interacting with the website (*e.g., creating new account, buying/selling stocks etc.*).

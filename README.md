@@ -48,11 +48,14 @@ This will execute the SQL statements in the input file, which will create the ta
 
 ## Preview of Main Features
 
-1) Create Account, Login
+#### Create New User Account, Login To Your Account
 ![gif of the project for creating a user account and loggin into an account](demos/register_login.gif)
-2) Search Stock, Buy/Sell Stock, Shortlist Stock/Update Shortlist/Close Shortlist
+
+#### Search Stock, Buy/Sell Stock, Shortlist Stock/Update Shortlist/Close Shortlist
 ![gif of the project for searching a stock, buying/selling/shortlisting the stock](demos/buy_sell_shortlist.gif)
-3) User Portfolio, User Transactions
+
+#### See User Portfolio, See User Transactions
 ![gif of the project showcasing user portfolio and user transactions sections](demos/portfolio_transactions.gif)
-4) Send Stock to a Friend 
+
+#### Send Stocks to a Friend 
 ![gif of the project for sending a stock to friend](demos/send_to_friend.gif)

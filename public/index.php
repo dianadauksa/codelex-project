@@ -16,13 +16,13 @@ use App\ViewVariables\{AuthViewVariables,
 use Dotenv\Dotenv;
 use Twig\{Environment, Loader\FilesystemLoader};
 
-require_once 'vendor/autoload.php';
+require_once '../vendor/autoload.php';
 session_start();
 
 date_default_timezone_set("Europe/Riga");
-$dotenv = Dotenv::createImmutable(__DIR__);
-$dotenv->safeLoad();
-$loader = new FilesystemLoader('views');
+$dotenv = Dotenv::createImmutable("../");
+$dotenv->load();
+$loader = new FilesystemLoader('../views');
 $twig = new Environment($loader);
 
 $authVariables = [

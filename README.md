@@ -14,20 +14,11 @@
 ## Technologies Used
 
 * PHP 7.4
-* MySQL 8.0
-* Composer 2.4
-* Tailwind CSS 3.2
-
-#### PHP Packages, Dependencies, Extensions Used
-
-* nikic/fast-route
-* vlucas/phpdotenv
-* twig/twig
-* guzzlehttp/guzzle
-* doctrine/dbal
-* ext-curl
-* ext-json
-* php-di/php-di
+* [Twig](https://twig.symfony.com) 3.4
+* [MySQL](https://www.mysql.com) 8.0
+* [Composer](https://getcomposer.org) 2.4
+* [Tailwind CSS](https://tailwindcss.com) 3.2
+* [PHP Dependency Injection](https://php-di.org)
 
 ## Setup
 
@@ -39,9 +30,9 @@
 3. Rename the `.env.example` file to `.env`
 4. Register at https://finnhub.io and generate a free API key.
 5. Input the generated API key in the `.env` file.
-6. Create a database to be used for the project (see [Database Setup](https://github.com/dianadauksa/stock-market/new/main?readme=1#database-setup-db-setup) for instructions).
+6. Create a database to be used for the project (see [Database Setup](#database-setup) for instructions).
 7. Enter database credentials in the `.env` file (`DB_HOST` is `localhost` if running the project locally).
-8. Run the project from the stock-market directory using the command: `php -S localhost:7000`
+8. Run the project from your local server using the command: `php -S localhost:7000` Make sure to run the command from the stock-market directory.
 9. Open the generated link in your chosen web browser and start using the website.
 
 ## Database Setup
@@ -58,7 +49,14 @@ This will execute the SQL statements in the input file, which will create the ta
 
 ## Preview of Main Features
 
-1) GIF Create Account, Login
-2) GIF Search for, Buy/Sell Stock, Shortlist Stock/Update Shortlist/Close Shortlist
-3) GIF User Portfolio, User Transactions
-4) GIF Send stock to a friend 
+#### Create New User Account, Login To Your Account
+![gif of the project for creating a user account and loggin into an account](demos/register_login.gif)
+
+#### Search Stock, Buy/Sell Stock, Shortlist Stock/Update Shortlist/Close Shortlist
+![gif of the project for searching a stock, buying/selling/shortlisting the stock](demos/buy_sell_shortlist.gif)
+
+#### See User Portfolio, See User Transactions
+![gif of the project showcasing user portfolio and user transactions sections](demos/portfolio_transactions.gif)
+
+#### Send Stocks to a Friend 
+![gif of the project for sending a stock to friend](demos/send_to_friend.gif)

@@ -31,9 +31,9 @@ class StockTransactionValidation
         $this->validateAmountOwnedForSale($stockSymbol, $sellAmount, $user);
     }
 
-    public function validationFailed(): bool
+    public function validationFailed(): array
     {
-        return count($_SESSION['errors']) > 0;
+        return $_SESSION['errors'] ?? [];
     }
 
     private function validateMoney(string $stockSymbol, int $stockAmount, User $user): void

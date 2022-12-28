@@ -100,6 +100,7 @@ class User
             ->from('transactions')
             ->where('user_id = ?')
             ->setParameter(0, $this->id)
+            ->orderBy('date', 'DESC')
             ->fetchAllAssociative();
         return $userTransactions ?: null;
     }

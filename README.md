@@ -32,7 +32,7 @@
 5. Input the generated API key in the `.env` file.
 6. Create a database to be used for the project (see [Database Setup](#database-setup) for instructions).
 7. Enter database credentials in the `.env` file (`DB_HOST` is `localhost` if running the project locally).
-8. Run the project from your local server using the command: `php -S localhost:7000` Make sure to run the command from the stock-market directory.
+8. Run the project from your local server using the command: `php -S localhost:7000` Make sure to run the command from the `public` directory.
 9. Open the generated link in your chosen web browser and start using the website.
 
 ## Database Setup

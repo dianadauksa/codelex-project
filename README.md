@@ -14,10 +14,11 @@
 ## Technologies Used
 
 * PHP 7.4
-* Twig 3.4
-* MySQL 8.0
-* Composer 2.4
-* Tailwind CSS 3.2
+* [Twig](https://twig.symfony.com) 3.4
+* [MySQL](https://www.mysql.com) 8.0
+* [Composer](https://getcomposer.org) 2.4
+* [Tailwind CSS](https://tailwindcss.com) 3.2
+* [PHP Dependency Injection](https://php-di.org)
 
 ## Setup
 
